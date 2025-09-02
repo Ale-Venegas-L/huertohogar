@@ -1,0 +1,27 @@
+:root{
+    --blanco : #F7F7F7; /*fondo principal*/
+    --esmeralda: #2E8B57; /*botones, enlaces, elementos interactivos*/
+    --mostaza: #FFD700; /*ofertas y promos*/
+    --marron: #8B4513; /*titulos y subtitulos*/
+    --gris-oscuro: #333; /*texto principal*/
+    --gris-medio: #666; /*descripciones de productos*/
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display&display=swap');
+
+/*font-family: "Montserrat", sans-serif; para texto general*/
+/*font-family: "Playfair Display", serif; para titulos*/
+
+body{
+    background: url(/assets/bg-texture.png);
+    font-family: "Montserrat", sans-serif;
+    color: var(--gris-oscuro);
+}
+
+h1{
+    font-family: "Playfair Display", serif
+}
+
+header, main{
+    background: var(--blanco);
+}
