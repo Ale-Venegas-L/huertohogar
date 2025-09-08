@@ -15,22 +15,67 @@
 body{
     background: url(/assets/bg-texture.png);
     color: var(--gris-oscuro);
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 h1, h2{
-    font-family: "Playfair Display", serif
+    font-family: "Playfair Display", serif;
+    color: var(--marron);
 }
 
-p, label, select, option, button{
+p, label, button, a{
     font-family: "Montserrat", sans-serif;
 }
 
-header, main{
+p, label{
+    color: var(--gris-oscuro);
+}
+
+a{
+    color: var(--esmeralda);
+    padding: 0pt 10pt;
+}
+
+a:hover{
+    text-shadow: 1pt 1pt 5pt var(--esmeralda);
+}
+
+a:active{
+    font-style: oblique;
+}
+
+header, main, footer{
     background: var(--blanco);
 }
 
 main{
-    width: max-content;
+    width: 60em;
+}
+
+/*header y footer*/
+header{
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+
+header #links{
+    text-align: center;
+}
+
+header h1{
+    text-indent: 1em;
+}
+
+footer{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
 }
 
 /*form*/
@@ -38,14 +83,17 @@ main{
 form{
     display: grid;
     grid-template-columns: auto;
+    align-items: center;
+    justify-content: center;
 }
-form input[type=text], form input[type=tel]{
+form input{
     padding: 5pt;
     border-radius: 5pt;
     border: 1pt solid var(--esmeralda);
     width: 50em;
     height: 1.5em;
     margin: 5pt;
+    color: var(--gris-medio);
 }
 
 form label{
@@ -53,30 +101,21 @@ form label{
 }
 
 form button{
-    font-size: x-large;
-    padding: 5pt 10pt;
-    margin: 5pt 10pt;
-}
-
-form select{
-    padding: 5pt 10pt;
-    text-align: center;
-    width: 25em;
-}
-
-form button, form select{
     background: var(--esmeralda);
     border-radius: 5pt;
     border: 1pt solid var(--esmeralda);
     color: var(--blanco);
     transition: all 1s ease-out;
+    font-size: x-large;
+    padding: 5pt 10pt;
+    margin: 5pt 10pt;
 }
 
-form button:hover, form select:hover{
+form button:hover{
     border-radius: 25pt;
     font-style: oblique
 }
-form #mail{
-    display: flex;
-    align-items: center;
+
+form button:active{
+    transform:scale(0.95);
 }
