@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de sesión</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<body>
+    <header>
+        <h1>
+            HuertoHogar
+        </h1>
+        <div id="links">
+            <a href="/index.html">Inicio</a>
+            <a href="/products/index.html">Productos</a>
+            <a href="/blogs/index.html">Blogs</a>
+            <a href="/contact.html">Contacto</a>
+            <a href="/login.html">Crear cuenta</a>
+        </div>
+    </header>
+      <main>
+         <h1>Crear usuario</h1>
+         <form>
+            <label for="run">RUN (sin puntos, ni guión)</label>
+            <input type="text" name="run" id="run" minlength="7" maxlength="9" required>
+            <label for="name">Nombre</label>
+            <input type="text" name="name" id="name" minlength="2" maxlength="50" required>
+            <label for="surname">Apellido</label>
+            <input type="text" name="surname" id="surname" minlength="2" maxlength="50" required>
+            <label for="email">Correo</label>
+            <input type="email" name="email" id="email" minlength="20" maxlength="100" required>
+            <label for="psswd">Contraseña</label>
+            <input type="password" name="psswd" id="psswd" minlength="2" maxlength="50" required>
+            <label for="psswd2">Confirmar Contraseña</label>
+            <input type="password" name="psswd2" id="psswd2" minlength="2" maxlength="50" required>
+            <label for="birthday">Fecha de nacimiento</label>
+            <input type="date" name="birthday" id="birthday">
+            <!--cuando se cambia la region, cambian las comunas disponibles -->
+            <button type="submit">Crear Cuenta</button>
+         </form>
+         <p id="msj">
+         </p>
+      </main>
+      <footer>
+        <p>
+            &copy; 2025 ; HuertoHogar
+        </p>
+    </footer>
+      <script src="assets/js/login.js"></script>
+   </body>
+</html>
