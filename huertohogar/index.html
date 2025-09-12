@@ -1,0 +1,248 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HuertoHogar - Frescura del Campo a tu Puerta</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style/styles.css"> <!-- RUTA CORREGIDA -->
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <nav class="container">
+      <a href="#" class="logo" onclick="showSection('home')">HuertoHogar 🌿</a>
+      <ul class="nav-links">
+        <li><a href="#" onclick="showSection('home')">Inicio</a></li>
+        <li><a href="#" onclick="showSection('products')">Productos</a></li>
+        <li><a href="#" onclick="showSection('about')">Nosotros</a></li>
+        <li><a href="#" onclick="showSection('contact')">Contacto</a></li>
+      </ul>
+      <div class="user-actions">
+        <a href="#" class="btn btn-secondary" onclick="showSection('login')" id="loginBtn">Iniciar Sesión</a>
+        <a href="#" class="btn btn-primary" onclick="showSection('register')" id="registerBtn">Registrarse</a>
+        <div class="cart-icon" onclick="openCart()">
+          <i class="fas fa-shopping-cart"></i>
+          <span class="cart-count" id="cartCount">0</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Home Section -->
+  <section id="home" class="section active">
+    <div class="hero">
+      <div class="container">
+        <h1>Frescura del Campo a tu Puerta</h1>
+        <p>Más de 6 años conectando familias chilenas con productos frescos y naturales directamente desde el campo</p>
+        <a href="#" class="btn btn-primary" onclick="showSection('products')">Ver Productos</a>
+      </div>
+    </div>
+    <!-- Categories -->
+    <section class="categories">
+      <div class="container">
+        <h2>Nuestras Categorías</h2>
+        <div class="categories-grid">
+          <div class="category-card" onclick="filterProducts('frutas', event)"> <!-- event añadido -->
+            <i class="fas fa-apple-alt"></i>
+            <h3>Frutas Frescas</h3>
+            <p>Frutas cultivadas y cosechadas en el punto óptimo de madurez para asegurar su sabor y frescura natural.</p>
+          </div>
+          <div class="category-card" onclick="filterProducts('verduras', event)"> <!-- event añadido -->
+            <i class="fas fa-carrot"></i>
+            <h3>Verduras Orgánicas</h3>
+            <p>Verduras cultivadas sin pesticidas ni químicos, garantizando un sabor auténtico y natural.</p>
+          </div>
+          <div class="category-card" onclick="filterProducts('organicos', event)"> <!-- event añadido -->
+            <i class="fas fa-leaf"></i>
+            <h3>Productos Orgánicos</h3>
+            <p>Productos elaborados con ingredientes naturales para mantener sus beneficios saludables.</p>
+          </div>
+          <div class="category-card" onclick="filterProducts('lacteos', event)"> <!-- event añadido -->
+            <i class="fas fa-glass-whiskey"></i>
+            <h3>Productos Lácteos</h3>
+            <p>Lácteos de granjas locales dedicadas a la producción responsable y de calidad.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products" class="section products">
+    <div class="container">
+      <h2>Nuestros Productos</h2>
+      <div class="filter-bar">
+        <button class="filter-btn active" onclick="filterProducts('todos', event)">Todos</button> <!-- event añadido -->
+        <button class="filter-btn" onclick="filterProducts('frutas', event)">Frutas</button> <!-- event añadido -->
+        <button class="filter-btn" onclick="filterProducts('verduras', event)">Verduras</button> <!-- event añadido -->
+        <button class="filter-btn" onclick="filterProducts('organicos', event)">Orgánicos</button> <!-- event añadido -->
+        <button class="filter-btn" onclick="filterProducts('lacteos', event)">Lácteos</button> <!-- event añadido -->
+      </div>
+      <div class="products-grid" id="productsGrid"></div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="section about">
+    <div class="container">
+      <div class="about-content">
+        <div class="about-text">
+          <h2>Sobre HuertoHogar</h2>
+          <p><strong>Misión:</strong> Proporcionar productos frescos y de calidad directamente desde el campo...</p>
+          <p><strong>Visión:</strong> Ser la tienda online líder en la distribución de productos frescos...</p>
+          <p>Con más de 6 años de experiencia, operamos en más de 9 puntos a lo largo del país...</p>
+        </div>
+        <div class="map-container">
+          <h3>Nuestras Ubicaciones</h3>
+          <div class="locations">
+            <div class="location">Santiago</div>
+            <div class="location">Puerto Montt</div>
+            <div class="location">Villarica</div>
+            <div class="location">Nacimiento</div>
+            <div class="location">Viña del Mar</div>
+            <div class="location">Valparaíso</div>
+            <div class="location">Concepción</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Login Section -->
+  <section id="login" class="section">
+    <div class="container" style="padding-top: 120px;">
+      <form class="auth-form" onsubmit="login(event)">
+        <h2>Iniciar Sesión</h2>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="loginEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input type="password" id="loginPassword" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Iniciar Sesión</button>
+        <p style="text-align: center; margin-top: 1rem;">
+          ¿No tienes cuenta? <a href="#" onclick="showSection('register')">Regístrate aquí</a>
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Register Section -->
+  <section id="register" class="section">
+    <div class="container" style="padding-top: 120px;">
+      <form class="auth-form" onsubmit="register(event)">
+        <h2>Crear Cuenta</h2>
+        <div class="form-group">
+          <label>Nombre Completo:</label>
+          <input type="text" id="registerName" required>
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" id="registerEmail" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input type="tel" id="registerPhone" required>
+        </div>
+        <div class="form-group">
+          <label>Dirección:</label>
+          <input type="text" id="registerAddress" required>
+        </div>
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input type="password" id="registerPassword" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Crear Cuenta</button>
+        <p style="text-align: center; margin-top: 1rem;">
+          ¿Ya tienes cuenta? <a href="#" onclick="showSection('login')">Inicia sesión aquí</a>
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact" class="section">
+    <div class="container" style="padding-top: 120px;">
+      <div class="auth-form">
+        <h2>Contáctanos</h2>
+        <div class="form-group">
+          <label>Nombre:</label>
+          <input type="text" required>
+        </div>
+        <div class="form-group">
+          <label>Email:</label>
+          <input type="email" required>
+        </div>
+        <div class="form-group">
+          <label>Mensaje:</label>
+          <textarea style="width: 100%; padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px; font-family: 'Montserrat', sans-serif; min-height: 120px; resize: vertical;" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Enviar Mensaje</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cart Modal -->
+  <div id="cartModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCart()">&times;</span>
+      <h2>Tu Carrito</h2>
+      <div id="cartItems"></div>
+      <div class="cart-total">
+        <h3>Total: $<span id="cartTotal">0</span> CLP</h3>
+        <button class="btn btn-primary" style="margin-top: 1rem;" onclick="checkout()">Finalizar Compra</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>HuertoHogar</h3>
+          <p>Conectando familias chilenas con productos frescos del campo desde hace más de 6 años.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Enlaces</h3>
+          <ul>
+            <li><a href="#" onclick="showSection('home')">Inicio</a></li>
+            <li><a href="#" onclick="showSection('products')">Productos</a></li>
+            <li><a href="#" onclick="showSection('about')">Nosotros</a></li>
+            <li><a href="#" onclick="showSection('contact')">Contacto</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contacto</h3>
+          <ul>
+            <li><i class="fas fa-phone"></i> +56 9 1234 5678</li>
+            <li><i class="fas fa-envelope"></i> info@huertohogar.cl</li>
+            <li><i class="fas fa-map-marker-alt"></i> Santiago, Chile</li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Síguenos</h3>
+          <ul>
+            <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
+            <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+            <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2024 HuertoHogar. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPTS - ORDEN IMPORTANTE -->
+  <script src="assets/js/products.js"></script> <!-- Cargar productos primero -->
+  <script src="assets/js/cart.js"></script>     <!-- Cargar carrito después -->
+  <script src="assets/js/auth.js"></script>     <!-- Cargar autenticación después -->
+  <script src="assets/js/main.js"></script>     <!-- Cargar main al final -->
+</body>
+</html>
