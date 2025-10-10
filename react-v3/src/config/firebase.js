@@ -10,7 +10,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyA1uuBpcPsVXF17I5CxQV7AfIYO0n3hQBA",
   authDomain: "huertohogar-4fe45.firebaseapp.com",
   projectId: "huertohogar-4fe45",
-  storageBucket: "huertohogar-4fe45.firebasestorage.app",
+  storageBucket: "huertohogar-4fe45.appspot.com",
   messagingSenderId: "162428008541",
   appId: "1:162428008541:web:b2107dd129a293acd975b4",
   measurementId: "G-L2SETE9BJP"
@@ -19,3 +19,4 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+export const db = getFirestore(app);
