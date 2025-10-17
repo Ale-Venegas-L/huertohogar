@@ -3,7 +3,7 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import {runValidator, validarCorreo, bdayValidator} from "../../utils/script";
 import {addUser} from "../../services/firestoreService"
-import {useHistory} from "react-router";
+import {useHistory} from "react-router-dom";
 
 const UserForm = () => {
     const [form, setForm] = useState({run:"", nombre:"", correo:"", clave:"", fecha:""});

@@ -9,6 +9,6 @@ export async function addUser(user) {
         console.log("Usuario registrado con ID ", docRef.id);
     } catch (error) {
         console.error("Error al registrar usuario: ", error);
-        return error;
+        throw error;
     }
 }
