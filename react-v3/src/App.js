@@ -3,7 +3,7 @@ import './App.css';
 
 function App() {
   return (
-    <UserProvider> {/* Agregamos UserProvider para envolver la app y y proporcionar el contexto de usuario*/}
+    <UserProvider>
       <Router>
         <RouterConfig />
       </Router>
