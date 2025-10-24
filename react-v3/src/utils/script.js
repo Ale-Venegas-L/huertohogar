@@ -1,7 +1,3 @@
-/*valores a validar: run, nombre, apellido, correo, contraseña,
-fecha de nacimiento ,seleccion de region y comuna*/
-
-
 function runValidator(run){
     const regex = /^\d{7,8}[0-9K]$/i;
     return regex.test(run);
@@ -23,3 +19,5 @@ function bdayValidator(bday){
     }
     return edad >=18;
 }
+
+export { runValidator, validarCorreo, bdayValidator };
