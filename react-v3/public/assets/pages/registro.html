@@ -9,17 +9,28 @@
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     </head>
     <body>
-        <header>
-            <h4>Logo</h4>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="assets/pages/nosotros.html">Nosotros</a></li>
-                    <li><a href="assets/pages/contacto.html">Contacto</a></li>
-                    <li><a href="assets/pages/catalogo.html">Catalogo</a></li>
-                    <li><a href="assets/pages/carrito.html"><i class="bi bi-cart3"></i> Carrito(0)</a></li>
-                    <li><a href="assets/pages/login.html">Login</a></li>
-                </ul>
+        <header class="header">
+            <nav class="nav-main">
+                <a href="/">
+                    <img src="../pictures/logo.png" alt="HuertoHogar logo" id="logo">
+                </a>
+                    <div class="nav-center">
+                        <a href="/">Home</a>
+                        <a href="/assets/pages/nosotros.html">Nosotros</a>
+                        <a href="/assets/pages/contacto.html">Contacto</a>
+                        <a href="/assets/pages/catalogo.html">Catalogo</a>
+                    </div>
+                    <div class="nav-right">
+                        <a href="/assets/pages/carrito.html"><i class="bi bi-cart3"></i>
+                             Carrito(0)
+                        </a>
+                        <a href="/assets/pages/login.html" id="login" class="btn-login">
+                            Login
+                        </a>
+                        <a href="/assets/pages/registro.html" id="reg" class="btn-login">
+                            Crear Cuenta
+                        </a>
+                    </div>
             </nav>
         </header>
         <main>
@@ -47,7 +58,6 @@
                 </form>
             </section>
         </main>
-        <!-- SOLO AGREGAR ESTA LÍNEA -->
         <script src="/static/js/bundle.js"></script>
         <!-- 🔹 SDK de Firebase (versión 8.x, compatible con tu código actual) -->
         <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
         messagingSenderId: "162428008541",
         appId: "1:162428008541:web:b2107dd129a293acd975b4",
         measurementId: "G-L2SETE9BJP"
-    };
+     }
 
     if (!firebase.apps?.length) {
         firebase.initializeApp(firebaseConfig);

@@ -10,31 +10,34 @@
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body>
-  <!-- HEADER -->
   <header class="header">
-    <!-- Línea Superior -->
     <div class="header-top">
       <div class="search-container">
         <input type="text" id="buscador" placeholder="Buscar productos..." class="search-input">
         <button id="btnBuscar" class="btn-buscar">Buscar</button>
       </div>
       <div class="auth-buttons">
-        <button class="btn-login">Iniciar Sesión</button>
-        <button class="btn-signup">Crear Cuenta</button>
+        <a href="/assets/pages/login.html" id="login" class="btn-login">
+          Login
+        </a>
+        <a href="/assets/pages/registro.html" id="reg" class="btn-login">
+          Crear Cuenta
+        </a>
       </div>
     </div>
 
-    <!-- Línea Inferior - Nav -->
+    <!-- Nav -->
     <nav class="nav-main">
       <div class="nav-center">
-        <a href="#" class="nav-link">Home</a>
+        <a href="/" class="nav-link">Home</a>
+
         <div class="dropdown">
           <a href="#" class="nav-link">Categoría ⌄</a>
           <div class="dropdown-content" id="dropdownCategorias"></div>
         </div>
+
         <a href="#" class="nav-link">Ofertas</a>
         <a href="nosotros.html" class="nav-link">Nosotros</a>
-        <a href="#" class="nav-link">Blog</a>
         <a href="contacto.html" class="nav-link">Contacto</a>
       </div>
       
@@ -47,9 +50,9 @@
     </nav>
   </header>
 
-  <!-- MAIN CONTENT -->
+  <!-- MAIN -->
   <main class="main">
-    <!-- CARDS DE CATEGORÍAS -->
+    <!--CATEGORÍAS -->
     <section class="categorias-section">
       <h2 class="section-title">Categorías</h2>
        <button id="btnVerTodos" class="btn-ver-todos">Todos los productos</button>

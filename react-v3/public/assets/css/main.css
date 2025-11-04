@@ -17,7 +17,8 @@
 
 body{
     font-family: "Montserrat", sans-serif;
-    color: var(--txt-principal)
+    color: var(--txt-principal);
+    line-height: 1.5;
 }
 
 /*Nav*/
@@ -51,10 +52,15 @@ body{
     color: var(--verde);
 }
 
+.nav-center a:active{
+    transform: translateY(-5pt);
+}
+
 .nav-right {
     margin-left: auto;
 }
 
+/*Botones*/
 .btn-carrito {
     padding: 10px 20px;
     background: #28a745;
@@ -84,6 +90,7 @@ body{
     padding: 5pt 10pt;
     margin: 2pt;
     border-radius: 10pt;
+    border: none;
 }
 
 #login{
@@ -110,5 +117,15 @@ body{
 }
 
 .btn-login:active{
-    transform: translateY(-10pt);
+    transform: translateY(-5pt);
+}
+
+#logo{
+    width: 10em;
+}
+
+/*Secciones*/
+main{
+    width: 85%;
+    margin: auto;
 }

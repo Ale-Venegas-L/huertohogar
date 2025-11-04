@@ -7,6 +7,7 @@ export async function addUser(user) {
             ...user,createdAt : new Date()
         });
         console.log("Usuario registrado con ID ", docRef.id);
+        return docRef;
     } catch (error) {
         console.error("Error al registrar usuario: ", error);
         throw error;
