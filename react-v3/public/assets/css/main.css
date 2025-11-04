@@ -129,3 +129,37 @@ main{
     width: 85%;
     margin: auto;
 }
+
+/*Formularios*/
+
+label{
+    font-weight: bold;
+}
+
+input{
+    width: 100%;
+    padding: 5pt;
+    border: 1pt solid var(--txt-secundario);
+    border-radius: 5pt;
+}
+input:focus{
+    outline: none;
+    border-color: var(--verde);
+}
+button[type="submit"]{
+    padding: 5pt 10pt;
+    background: var(--verde);
+    color: var(--blanco-suave);
+    border: none;
+    border-radius: 10pt;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+button[type="submit"]:hover{
+    background: var(--blanco-suave);
+    color: var(--verde);
+}
+button[type="submit"]:active{
+    transform: translateY(-5pt);
+}

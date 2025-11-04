@@ -12,6 +12,48 @@ const db = firebase.firestore();
 // Variables globales
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
+// Helpers de precio con descuento (coherentes con carrito.js)
+function getPrecioUnitario(producto) {
+    const base = Number(producto?.precio) || 0;
+    const d = producto?.descuento;
+    if (d && d.activo) {
+        if (d.tipo === 'percent') {
+            const pct = Math.min(Math.max(Number(d.valor) || 0, 0), 100);
+            return Math.max(0, Math.round(base * (1 - pct / 100)));
+        }
+        if (d.tipo === 'fixed') {
+            const val = Math.max(Number(d.valor) || 0, 0);
+            return Math.max(0, Math.round(base - val));
+        }
+    }
+    if (producto?.precioAnterior) return Math.max(0, Math.round(base));
+    return Math.max(0, Math.round(base));
+}
+
+function getSubtotal(producto) {
+    const qty = Number(producto?.cantidad) || 1;
+    return getPrecioUnitario(producto) * qty;
+}
+
+function getDiscountMeta(producto) {
+    const base = Number(producto?.precio) || 0;
+    const d = producto?.descuento;
+    if (d && d.activo) {
+        const current = getPrecioUnitario(producto);
+        const original = Math.max(0, Math.round(base));
+        const pct = original > 0 ? Math.round((1 - current / original) * 100) : 0;
+        return { has: current < original, original, current, pct: Math.max(0, pct) };
+    }
+    if (producto?.precioAnterior) {
+        const original = Math.max(0, Math.round(Number(producto.precioAnterior) || 0));
+        const current = Math.max(0, Math.round(Number(producto.precio) || 0));
+        const pct = original > 0 ? Math.round((1 - current / original) * 100) : 0;
+        return { has: current < original, original, current, pct: Math.max(0, pct) };
+    }
+    const p = Math.max(0, Math.round(base));
+    return { has: false, original: p, current: p, pct: 0 };
+}
+
 // Datos de regiones y comunas de Chile
 const regionesComunas = {
     "Arica y Parinacota": ["Arica", "Camarones", "Putre", "General Lagos"],
@@ -106,7 +148,9 @@ function renderizarProductosCheckout() {
         return;
     }
 
-    tbody.innerHTML = carrito.map(producto => `
+    tbody.innerHTML = carrito.map(producto => {
+        const m = getDiscountMeta(producto);
+        return `
         <tr>
             <td>
                 <img src="${producto.imagen}" 
@@ -115,11 +159,17 @@ function renderizarProductosCheckout() {
                      onerror="this.src='https://via.placeholder.com/100x100/cccccc/969696?text=Imagen'">
             </td>
             <td>${producto.nombre}</td>
-            <td>$${producto.precio?.toLocaleString('es-CL')}</td>
+            <td>
+                <div>
+                    <span style="font-weight:600; color:#0a7b18;">$${m.current.toLocaleString('es-CL')}</span>
+                    ${m.has ? `<span style=\"margin-left:8px; text-decoration: line-through; color:#777;\">$${m.original.toLocaleString('es-CL')}</span>` : ''}
+                    ${m.has ? `<span style=\"margin-left:8px; background:#e53935; color:#fff; border-radius:12px; padding:2px 8px; font-size:12px;\">-${m.pct}%</span>` : ''}
+                </div>
+            </td>
             <td>${producto.cantidad || 1}</td>
-            <td>$${((producto.precio || 0) * (producto.cantidad || 1)).toLocaleString('es-CL')}</td>
+            <td>$${getSubtotal(producto).toLocaleString('es-CL')}</td>
         </tr>
-    `).join('');
+    `}).join('');
 }
 
 /**
@@ -127,7 +177,7 @@ function renderizarProductosCheckout() {
  */
 function actualizarTotales() {
     const total = carrito.reduce((sum, producto) => {
-        return sum + ((producto.precio || 0) * (producto.cantidad || 1));
+        return sum + getSubtotal(producto);
     }, 0);
     
     document.getElementById('totalPagar').textContent = total.toLocaleString('es-CL');
@@ -139,7 +189,7 @@ function actualizarTotales() {
  */
 function actualizarCarritoHeader() {
     const total = carrito.reduce((sum, producto) => {
-        return sum + ((producto.precio || 0) * (producto.cantidad || 1));
+        return sum + getSubtotal(producto);
     }, 0);
     
     document.querySelector('.carrito-total').textContent = total.toLocaleString('es-CL');

@@ -1,8 +1,33 @@
-<h1 id="bienvenido"></h1>
-<script>
-    const parametros = new URLSearchParams(window.location.search);
-    const nombreUsuario = parametros.get("nombre");
-    document.getElementById("bienvenido").innerText =
-        nombreUsuario ? `Bienvenido ${nombreUsuario}!` : "Bienvenido!";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Cliente</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/profile.css">
+</head>
+<body>
+   <aside>
+        <a href="/">
+            <img src="../pictures/logo.png" alt="HuertoHogar logo" id="logo">
+        </a>
+        <a href="#">
+            Mis Compras
+        </a>
+        <a href="#">
+            Mi Perfil
+        </a>
+    </aside>
+    <main>
+        <h1 id="bienvenido"></h1>
+    </main>
+    <script>
+        const parametros = new URLSearchParams(window.location.search);
+        const nombreUsuario = parametros.get("nombre");
+        document.getElementById("bienvenido").innerText =
+            nombreUsuario ? `Bienvenido ${nombreUsuario}!` : "Bienvenido!";
 
-</script>
+    </script>
+</body>
+</html>

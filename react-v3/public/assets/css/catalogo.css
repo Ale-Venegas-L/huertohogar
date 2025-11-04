@@ -1,6 +1,6 @@
 /* Reset CSS */
 * {
-    margin: 0;ext install rjmacarthy.twinny
+    margin: 0;
     padding: 0;
     box-sizing: border-box;
   }
@@ -29,6 +29,9 @@
     padding: 15px 40px;
     border-bottom: 1px solid #e9ecef;
   }
+
+
+
   /* Buscador */
   .search-container {
     display: flex;
@@ -139,6 +142,40 @@
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
   }
+  .btn-login, .btn-signup{
+  color: var(--blanco-suave);
+  padding: 5pt 10pt;
+  margin: 2pt;
+  border-radius: 10pt;
+  border: none;
+  background: var(--verde);
+}
+  .btn-login{ 
+    background: var(--verde); 
+  }
+  
+  .btn-signup{
+    background: #007bff;
+   }
+
+  .btn-login:hover, .btn-signup:hover { 
+    color: var(--verde);
+    background: var(--blanco-suave);
+  }
+
+  .btn-login:active, .btn-signup:active{
+    color: #007bff;
+    background: var(--blanco-suave);
+  }
+
+  .btn-login:hover, .btn-signup:hover { 
+    box-shadow: 5pt 5pt 10pt var(--txt-principal);
+   }
+  
+  .btn-login:active, .btn-signup:active{ 
+    transform: translateY(-5pt); 
+  }
+  
   /* CARDS DE CATEGORÍAS */
   .categorias-section {
     margin-bottom: 50px;
@@ -271,6 +308,25 @@
     .nav-right {
       margin-left: 0;
     }
+
+    .nav-link button{
+      padding: 5pt 10pt;
+      background: var(--verde);
+      color: var(--blanco-suave);
+      border: none;
+      border-radius: 10pt;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    .nav-link button:hover{
+      background: var(--blanco-suave);
+      color: var(--verde);
+    }
+    .nav-link button:active{
+      transform: translateY(-5pt);
+    }
+
   /* Ajustar el padding del main */
     .categorias-grid {
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
