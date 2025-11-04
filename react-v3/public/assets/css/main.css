@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+:root{
+    --blanco-suave: #f7f7f7;
+    --verde: #2E8B57;
+    --amarillo: #FFD700;
+    --marrón: #8B4513;
+    --txt-principal: #333;
+    --txt-secundario: #666;
+}
+
+*{
+    margin:0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: "Montserrat", sans-serif;
+    color: var(--txt-principal)
+}
+
+/*Nav*/
+.nav-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background: white;
+    position: relative;
+}
+
+.nav-center {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.nav-center a{
+    background: var(--verde);
+    color: var(--blanco-suave);
+    padding: 5pt 10pt;
+    border-radius: 10pt;
+}
+
+.nav-center a:hover{
+    background: var(--blanco-suave);
+    color: var(--verde);
+}
+
+.nav-right {
+    margin-left: auto;
+}
+
+.btn-carrito {
+    padding: 10px 20px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+
+.btn-carrito:hover {
+    background: #218838;
+    transform: translateY(-2px);
+}
+
+.carrito-icon {
+    font-size: 16px;
+}
+
+.btn-login{
+    color: var(--blanco-suave);
+    padding: 5pt 10pt;
+    margin: 2pt;
+    border-radius: 10pt;
+}
+
+#login{
+    background: var(--verde);
+}
+
+#reg{
+    background: #007bff;
+}
+
+#login:active, #login:hover{
+    color: var(--verde);
+    background: var(--blanco-suave);
+}
+
+#reg:active, #reg:hover{
+    color: #007bff;
+    background: var(--blanco-suave);
+
+}
+
+.btn-login:hover{
+    box-shadow: 5pt 5pt 10pt var(--txt-principal);
+}
+
+.btn-login:active{
+    transform: translateY(-10pt);
+}

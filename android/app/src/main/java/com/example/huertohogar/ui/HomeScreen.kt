@@ -27,14 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.huertohogar.navigation.Screen
-import com.example.huertohogar.viewmodels.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    viewModel: MainViewModel = viewModel()
+    navController: NavController
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -47,8 +45,29 @@ fun HomeScreen(
                 NavigationDrawerItem(
                     label = {Text("Ir a Perfil")},
                     selected = false,
-                    onClick = {scope.launch { drawerState.close()}
-                    viewModel.navigateTo(Screen.Profile)}
+                    onClick = {
+                        // Close drawer and then navigate
+                        scope.launch {
+                            drawerState.close()
+                            navController.navigate(Screen.Profile.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
+                )
+                NavigationDrawerItem(
+                    label = { Text("Ir a Catálogo") },
+                    selected = false,
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            navController.navigate(Screen.Catalogue.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }
+                    }
                 )
             }
         }
@@ -56,7 +75,7 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = {Text("Pantalla Hime")},
+                    title = {Text("Pantalla Home")},
                     navigationIcon = {
                         IconButton(onClick = {
                             scope.launch { drawerState.open() }
@@ -77,8 +96,33 @@ fun HomeScreen(
             ) {
                 Text("Bienvenido a la página de Inicio")
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = {viewModel.navigateTo(Screen.Profile)}) {
+                Button(onClick = {
+                    navController.navigate(Screen.Profile.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }) {
                     Text("Ir a perfil")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(onClick = {
+                    navController.navigate(Screen.Form.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }) {
+                    Text("Ir a formulario")
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button(onClick = {
+                    navController.navigate(Screen.Catalogue.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }) {
+                    Text("Ir a catalogo")
                 }
             }
         }

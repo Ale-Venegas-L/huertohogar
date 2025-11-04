@@ -12,4 +12,7 @@ interface UsuarioDAO {
 
     @Query("SELECT * FROM Usuario")
     suspend fun obtenerUsuario(): List<Usuario>
+
+    @Query("SELECT * FROM Usuario WHERE nombre = :nombre AND contrasena = :contrasena LIMIT 1")
+    suspend fun obtenerPorCredenciales(nombre: String, contrasena: String): Usuario?
 }

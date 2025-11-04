@@ -12,6 +12,8 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,6 +32,7 @@ fun ProfileScreen(
 ){
     val items = listOf(Screen.Home, Screen.Profile)
     var selectedItem by remember{ mutableStateOf(1) }
+    val currentUser by viewModel.currentUser.collectAsState()
 
     Scaffold(
         bottomBar = {
@@ -39,7 +42,10 @@ fun ProfileScreen(
                         selected = selectedItem == index,
                         onClick = {
                             selectedItem=index
-                            viewModel.navigateTo(screen)
+                            navController.navigate(screen.route) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         },
                         label = { Text(screen.route) },
                         icon = {
@@ -59,7 +65,8 @@ fun ProfileScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text("Bienvenido al perfil")
+            val saludo = currentUser?.let { "Bienvenido, ${it.nombre}" } ?: "Bienvenido al perfil"
+            Text(saludo)
         }
     }
 }

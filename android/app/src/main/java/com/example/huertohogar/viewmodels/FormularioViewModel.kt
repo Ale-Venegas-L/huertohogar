@@ -26,4 +26,8 @@ class FormularioViewModel(private val usuarioDAO: UsuarioDAO) : ViewModel() {
             _usuarios.value = usuarioDAO.obtenerUsuario()
         }
     }
+
+    suspend fun autenticar(nombre: String, contrasena: String): Usuario? {
+        return usuarioDAO.obtenerPorCredenciales(nombre, contrasena)
+    }
 }
