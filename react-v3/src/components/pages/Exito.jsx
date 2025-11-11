@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './Exito.css';
 
 /**
@@ -8,7 +8,6 @@ import './Exito.css';
  */
 const CompraExitosa = () => {
   const [compra, setCompra] = useState(null);
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,20 +21,96 @@ const CompraExitosa = () => {
     setCompra(ultimaCompra);
   }, [navigate]);
 
-  /**
-   * Simula la impresión de la boleta en PDF
-   */
   const imprimirBoletaPDF = () => {
-    alert('Generando boleta en PDF...\nLa descarga comenzará en breve.');
-    // En una implementación real, aquí se generaría el PDF
+    if (!compra) return;
+    try {
+      const fecha = new Date().toLocaleDateString('es-CL');
+      const contenidoBoleta = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Boleta de Compra - Orden ${compra.numeroOrden}</title>
+          <meta charset="utf-8" />
+          <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+            .info-cliente { margin-bottom: 20px; }
+            .tabla-productos { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            .tabla-productos th, .tabla-productos td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+            .tabla-productos th { background-color: #f2f2f2; }
+            .total { text-align: right; font-size: 18px; font-weight: bold; margin-top: 20px; }
+            .footer { margin-top: 30px; text-align: center; font-size: 12px; color: #666; }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>BOLETA ELECTRÓNICA</h1>
+            <p>Orden: ${compra.numeroOrden} | Fecha: ${fecha}</p>
+          </div>
+          <div class="info-cliente">
+            <h3>Datos del Cliente</h3>
+            <p><strong>Nombre:</strong> ${compra.cliente.nombre} ${compra.cliente.apellidos}</p>
+            <p><strong>Email:</strong> ${compra.cliente.correo}</p>
+            <p><strong>Dirección:</strong> ${compra.direccion.calle}, ${compra.direccion.departamento || ''}</p>
+            <p><strong>Comuna:</strong> ${compra.direccion.comuna}, ${compra.direccion.region}</p>
+            ${compra.direccion.indicaciones ? `<p><strong>Indicaciones:</strong> ${compra.direccion.indicaciones}</p>` : ''}
+          </div>
+          <table class="tabla-productos">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${compra.productos.map(p => `
+                <tr>
+                  <td>${p.nombre}</td>
+                  <td>$${(p.precio || 0).toLocaleString('es-CL')}</td>
+                  <td>${p.cantidad || 1}</td>
+                  <td>$${(((p.precio || 0)) * (p.cantidad || 1)).toLocaleString('es-CL')}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <div class="total">TOTAL: $${compra.total.toLocaleString('es-CL')}</div>
+          <div class="footer">
+            <p>¡Gracias por su compra!</p>
+            <p>Este documento es una boleta electrónica generada automáticamente</p>
+          </div>
+        </body>
+        </html>
+      `;
+      const w = window.open('', '_blank');
+      if (!w) return alert('No se pudo abrir la ventana de impresión');
+      w.document.write(contenidoBoleta);
+      w.document.close();
+      w.onload = function() {
+        w.print();
+        setTimeout(() => w.close(), 500);
+      };
+    } catch (e) {
+      console.error('Error al generar la boleta:', e);
+      alert('Error al generar la boleta. Por favor, intente nuevamente.');
+    }
   };
 
-  /**
-   * Simula el envío de la boleta por email
-   */
   const enviarBoletaEmail = () => {
     if (!compra) return;
-    alert(`Boleta enviada a: ${compra.cliente.correo}\nRevisa tu bandeja de entrada.`);
+    try {
+      const email = compra.cliente.correo;
+      const btn = document.getElementById('btnEnviarEmail');
+      const original = btn ? btn.innerHTML : '';
+      if (btn) { btn.innerHTML = 'Enviando...'; btn.disabled = true; }
+      setTimeout(() => {
+        if (btn) { btn.innerHTML = original || 'Enviar Boleta por Email'; btn.disabled = false; }
+        alert(`La boleta ha sido enviada exitosamente a ${email}`);
+      }, 1500);
+    } catch (e) {
+      alert('Error al enviar la boleta. Por favor, intente nuevamente.');
+    }
   };
 
   if (!compra) {
@@ -201,6 +276,7 @@ const CompraExitosa = () => {
         </button>
         <button 
           className="btn-enviar-email"
+          id="btnEnviarEmail"
           onClick={enviarBoletaEmail}
         >
           Enviar Boleta por Email

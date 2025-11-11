@@ -3,12 +3,12 @@ import Input from "../atoms/Input";
 import Button from "../atoms/Button";
 import {runValidator, validarCorreo, bdayValidator} from "../../utils/script";
 import {addUser} from "../../services/firestoreService"
-import {useHistory} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const UserForm = () => {
     const [form, setForm] = useState({run:"", nombre:"", correo:"", clave:"", fecha:""});
     const [msg, setMsg] = useState("");
-    const history = useHistory();
+    const navigate = useNavigate();
 
     const handleChange = e => setForm({...form, [e.target.id]:e.target.value});
     const handleSubmit = async e => {
@@ -22,7 +22,7 @@ const UserForm = () => {
         await addUser(form);
         setMsg("Formulario enviado")
         setTimeout(() => {
-            history.push(correo === "admin@duoc.cl" ? "/perfil-admin?nombre="+nombre : "/perfil-cliente?nombre="+nombre);
+            navigate(correo === "admin@duoc.cl" ? "/perfil-admin?nombre="+nombre : "/perfil-cliente?nombre="+nombre);
         }, 1000);
     };
 

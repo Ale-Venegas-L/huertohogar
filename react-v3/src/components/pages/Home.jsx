@@ -1,9 +1,9 @@
-import UserForm from "../molecules/UserForm"
+import { Link } from "react-router-dom";
 
 const Home = () => {
     return (
-        <main>          
-            <Link to="/registro"></Link>
+        <main>
+            <Link to="/registro">Ir a Registro</Link>
         </main>
     )
 };

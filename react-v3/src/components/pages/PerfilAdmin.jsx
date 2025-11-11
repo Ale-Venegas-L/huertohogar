@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
-import { UserContext } from "../../contexts/UserContext";
+import { UserContext } from "../../context/UserContext";
+import "../../styles/profile.css";
 
 const PerfilAdmin = () => {
   const { user } = useContext(UserContext); // Accedemos al usuario desde el contexto

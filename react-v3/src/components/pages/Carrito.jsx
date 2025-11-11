@@ -1,35 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../../services/firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../config/firebase';
+import { collection, getDocs, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './Carrito.css';
 
-import React, { useState, useEffect } from 'react';
-import { db } from '../../services/firebase';
-import { collection, getDocs } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
-import './Carrito.css';
-
-/**
- * Componente del Carrito de Compras
- * Muestra productos en oferta y el resumen del carrito
- */
 const Carrito = () => {
   const [carrito, setCarrito] = useState([]);
   const [productosOferta, setProductosOferta] = useState([]);
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
-  // Cargar carrito desde localStorage al inicializar
+  // Helpers de precio y descuentos (alineados con public/carrito.js)
+  const getPrecioUnitario = (producto) => {
+    const base = Number(producto?.precio) || 0;
+    const d = producto?.descuento;
+    if (d && d.activo) {
+      if (d.tipo === 'percent') {
+        const pct = Math.min(Math.max(Number(d.valor) || 0, 0), 100);
+        return Math.max(0, Math.round(base * (1 - pct / 100)));
+      }
+      if (d.tipo === 'fixed') {
+        const val = Math.max(Number(d.valor) || 0, 0);
+        return Math.max(0, Math.round(base - val));
+      }
+    }
+    if (producto?.precioAnterior) return Math.max(0, Math.round(base));
+    return Math.max(0, Math.round(base));
+  };
+
+  const getSubtotal = (producto) => {
+    const qty = Number(producto?.cantidad) || 1;
+    return getPrecioUnitario(producto) * qty;
+  };
+
+  const getDiscountMeta = (producto) => {
+    const base = Number(producto?.precio) || 0;
+    const d = producto?.descuento;
+    if (d && d.activo) {
+      const current = getPrecioUnitario(producto);
+      const original = Math.max(0, Math.round(base));
+      const pct = original > 0 ? Math.round((1 - current / original) * 100) : 0;
+      return { has: current < original, original, current, pct: Math.max(0, pct) };
+    }
+    if (producto?.precioAnterior) {
+      const original = Math.max(0, Math.round(Number(producto.precioAnterior) || 0));
+      const current = Math.max(0, Math.round(Number(producto.precio) || 0));
+      const pct = original > 0 ? Math.round((1 - current / original) * 100) : 0;
+      return { has: current < original, original, current, pct: Math.max(0, pct) };
+    }
+    const p = Math.max(0, Math.round(base));
+    return { has: false, original: p, current: p, pct: 0 };
+  };
+
   useEffect(() => {
     const carritoGuardado = JSON.parse(localStorage.getItem('carrito')) || [];
     setCarrito(carritoGuardado);
     cargarProductosOferta();
   }, []);
 
-  /**
-   * Carga productos en oferta desde Firestore
-   */
   const cargarProductosOferta = async () => {
     try {
       const snapshot = await getDocs(collection(db, 'producto'));
@@ -37,9 +65,8 @@ const Carrito = () => {
         id: doc.id,
         ...doc.data()
       }));
-      
-      // Filtrar productos con precio anterior (en oferta)
-      const productosConOferta = productos.filter(producto => producto.precioAnterior);
+
+      const productosConOferta = productos.filter(producto => (producto?.descuento && producto.descuento.activo) || producto?.precioAnterior);
       setProductosOferta(productosConOferta);
     } catch (error) {
       console.error('Error cargando productos en oferta:', error);
@@ -48,14 +75,21 @@ const Carrito = () => {
     }
   };
 
-  /**
-   * Agrega un producto al carrito
-   */
-  const agregarAlCarrito = (producto) => {
+  const agregarAlCarrito = async (producto) => {
+    // Verificar stock antes
+    if ((producto.stock ?? 0) <= 0) {
+      alert('Producto sin stock disponible');
+      return;
+    }
     const productoExistente = carrito.find(item => item.id === producto.id);
     let nuevoCarrito;
 
     if (productoExistente) {
+      // Verificar stock disponible para aumentar
+      if ((producto.stock ?? 0) <= (productoExistente.cantidad || 1) ) {
+        alert('No hay suficiente stock disponible');
+        return;
+      }
       nuevoCarrito = carrito.map(item =>
         item.id === producto.id
           ? { ...item, cantidad: (item.cantidad || 1) + 1 }
@@ -67,45 +101,55 @@ const Carrito = () => {
 
     setCarrito(nuevoCarrito);
     guardarCarrito(nuevoCarrito);
+    try {
+      await actualizarStockFirebase(producto.id, 1);
+    } catch (e) {
+      console.error('No se pudo actualizar stock:', e);
+    }
     mostrarNotificacion(`"${producto.nombre}" agregado al carrito`);
   };
 
-  /**
-   * Actualiza la cantidad de un producto en el carrito
-   */
-  const actualizarCantidad = (index, nuevaCantidad) => {
+  const actualizarCantidad = async (index, nuevaCantidad) => {
     if (nuevaCantidad < 1) return;
+    const item = carrito[index];
+    const delta = (nuevaCantidad - (item.cantidad || 1));
+    let permitido = true;
+    if (delta > 0) {
+      // Validar stock remoto actual
+      try {
+        const ref = doc(db, 'producto', item.id);
+        const snap = await getDoc(ref);
+        const stockActual = snap.exists() ? (snap.data().stock ?? 0) : 0;
+        if (stockActual < delta) permitido = false;
+      } catch (e) { console.error(e); }
+      if (!permitido) { alert('No hay suficiente stock disponible'); return; }
+    }
 
-    const nuevoCarrito = carrito.map((item, i) =>
-      i === index ? { ...item, cantidad: nuevaCantidad } : item
-    );
-
+    const nuevoCarrito = carrito.map((p, i) => i === index ? { ...p, cantidad: nuevaCantidad } : p);
     setCarrito(nuevoCarrito);
     guardarCarrito(nuevoCarrito);
+
+    try {
+      if (delta > 0) await actualizarStockFirebase(item.id, delta);
+      else if (delta < 0) await restaurarStockFirebase(item.id, -delta);
+    } catch (e) { console.error('Error sincronizando stock:', e); }
   };
 
-  /**
-   * Elimina un producto del carrito
-   */
-  const eliminarDelCarrito = (index) => {
+  const eliminarDelCarrito = async (index) => {
     const producto = carrito[index];
+    const cantidadEliminada = producto.cantidad || 1;
     const nuevoCarrito = carrito.filter((_, i) => i !== index);
-    
+
     setCarrito(nuevoCarrito);
     guardarCarrito(nuevoCarrito);
     mostrarNotificacion(`"${producto.nombre}" eliminado del carrito`);
+    try { await restaurarStockFirebase(producto.id, cantidadEliminada); } catch (e) { console.error(e); }
   };
 
-  /**
-   * Guarda el carrito en localStorage
-   */
   const guardarCarrito = (nuevoCarrito) => {
     localStorage.setItem('carrito', JSON.stringify(nuevoCarrito));
   };
 
-  /**
-   * Limpia todo el carrito
-   */
   const limpiarCarrito = () => {
     if (carrito.length === 0) {
       alert('El carrito ya está vacío');
@@ -119,9 +163,6 @@ const Carrito = () => {
     }
   };
 
-  /**
-   * Navega al checkout
-   */
   const irAlCheckout = () => {
     if (carrito.length === 0) {
       alert('Agrega productos al carrito antes de continuar');
@@ -130,21 +171,34 @@ const Carrito = () => {
     navigate('/checkout');
   };
 
-  /**
-   * Muestra una notificación temporal
-   */
   const mostrarNotificacion = (mensaje) => {
-    // Implementación simple de notificación
-    alert(mensaje); // En una app real usarías un sistema de notificaciones
+    alert(mensaje);
   };
 
-  /**
-   * Calcula el total del carrito
-   */
   const calcularTotal = () => {
     return carrito.reduce((total, producto) => {
-      return total + (producto.precio || 0) * (producto.cantidad || 1);
+      return total + getSubtotal(producto);
     }, 0);
+  };
+
+  // Actualizar stock en Firestore (disminuye stock al agregar/aumentar)
+  const actualizarStockFirebase = async (productId, cantidad) => {
+    const ref = doc(db, 'producto', productId);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const stockActual = snap.data().stock ?? 0;
+      await updateDoc(ref, { stock: stockActual - cantidad });
+    }
+  };
+
+  // Restaurar stock en Firestore (al disminuir/eliminar)
+  const restaurarStockFirebase = async (productId, cantidad) => {
+    const ref = doc(db, 'producto', productId);
+    const snap = await getDoc(ref);
+    if (snap.exists()) {
+      const stockActual = snap.data().stock ?? 0;
+      await updateDoc(ref, { stock: stockActual + cantidad });
+    }
   };
 
   if (cargando) {
@@ -201,11 +255,9 @@ const Carrito = () => {
         </div>
       </section>
 
-      {/* Resumen del Carrito */}
       <section className="resumen-carrito">
         <h2 className="section-title">Resumen del Carrito</h2>
         
-        {/* Tabla de productos en carrito */}
         <div className="tabla-carrito-container">
           <table className="tabla-carrito">
             <thead>
@@ -247,7 +299,15 @@ const Carrito = () => {
                       />
                     </td>
                     <td>{producto.nombre}</td>
-                    <td>${producto.precio?.toLocaleString('es-CL')}</td>
+                    <td>
+                      {(() => { const m = getDiscountMeta(producto); return (
+                        <div>
+                          <span style={{fontWeight:600, color:'#0a7b18'}}>${'{'}m.current.toLocaleString('es-CL'){'}'}</span>
+                          {m.has && <span style={{marginLeft:8, textDecoration:'line-through', color:'#777'}}>${'{'}m.original.toLocaleString('es-CL'){'}'}</span>}
+                          {m.has && <span style={{marginLeft:8, background:'#e53935', color:'#fff', borderRadius:12, padding:'2px 8px', fontSize:12}}>-{ '{'}m.pct{'}'}%</span>}
+                        </div>
+                      ); })()}
+                  </td>
                     <td>
                       <div className="controles-cantidad">
                         <button 
@@ -268,7 +328,7 @@ const Carrito = () => {
                       </div>
                     </td>
                     <td>
-                      ${((producto.precio || 0) * (producto.cantidad || 1)).toLocaleString('es-CL')}
+                      ${'{'}getSubtotal(producto).toLocaleString('es-CL'){'}'}
                     </td>
                     <td>
                       <button 
@@ -285,7 +345,6 @@ const Carrito = () => {
           </table>
         </div>
 
-        {/* Total y Botones */}
         {carrito.length > 0 && (
           <div className="carrito-footer">
             <div className="total-container">

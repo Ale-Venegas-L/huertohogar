@@ -1,5 +1,6 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router } from 'react-router-dom';
+import RouterConfig from './routes/RouterConfig';
+import { UserProvider } from './context/UserContext';
 
 function App() {
   return (
