@@ -4,9 +4,6 @@ import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import './Checkout.css';
 
-/**
- * Componente de Checkout - Procesamiento de compra
- */
 const Checkout = () => {
   const [carrito, setCarrito] = useState([]);
   const [formData, setFormData] = useState({
