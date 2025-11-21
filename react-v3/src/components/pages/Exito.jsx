@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Exito.css';
+import '../../styles/Exito.css';
 
 /**
  * Componente de Compra Exitosa

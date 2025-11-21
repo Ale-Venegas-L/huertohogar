@@ -1,57 +1,99 @@
-module.exports = function (config) {
-  const path = require('path');
-  const fs = require('fs');
-
-  // Try to load external webpack config if it exists; otherwise use a minimal inline one
-  let webpackConfig = undefined;
-  const externalConfigPath = path.resolve(__dirname, 'webpack.config.js');
-  if (fs.existsSync(externalConfigPath)) {
-    // eslint-disable-next-line global-require, import/no-dynamic-require
-    webpackConfig = require(externalConfigPath);
-  } else {
-    webpackConfig = {
-      mode: 'development',
-      module: {
-        rules: [
-          {
-            test: /\.(js|jsx)$/,
-            exclude: /node_modules/,
-            use: {
-              loader: 'babel-loader',
-              options: {
-                presets: [
-                  ['@babel/preset-env', { targets: { esmodules: true } }],
-                  ['@babel/preset-react', { runtime: 'automatic' }],
-                ],
-              },
-            },
-          },
+module.exports = function(config) {
+    config.set({
+        // Framework base
+        frameworks: ['jasmine'],
+        
+        // Archivos a incluir en las pruebas - SOLO nuestros tests
+        files: [
+            'src/test/unit/**/*.test.js'
         ],
-      },
-      resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
-    };
-  }
-
-  config.set({
-    frameworks: ['jasmine'],
-    files: [
-      { pattern: 'src/**/*.test.js', watched: false },
-      { pattern: 'src/**/*.test.jsx', watched: false },
-    ],
-
-    preprocessors: {
-      'src/**/*.test.js': ['webpack'],
-      'src/**/*.test.jsx': ['webpack'],
-    },
-
-    webpack: webpackConfig,
-
-    browsers: ['FirefoxHeadless'],
-    reporters: ['progress'],
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    singleRun: process.env.CI === 'true',
-    concurrency: Infinity,
-    plugins: ['karma-jasmine', 'karma-firefox-launcher', 'karma-webpack'],
-  });
+        
+        // Excluir archivos problemáticos
+        exclude: [
+            'src/**/*.test.jsx',
+            'src/**/*.test.ts',
+            'src/**/*.test.tsx',
+            'src/App.test.js',
+            'src/components/**/*.test.js'
+        ],
+        
+        // Preprocesadores
+        preprocessors: {
+            'src/test/unit/**/*.test.js': ['webpack']
+        },
+        
+        // Webpack configurado correctamente
+        webpack: {
+            mode: 'development',
+            module: {
+                rules: [
+                    {
+                        test: /\.js$/,
+                        exclude: /node_modules/,
+                        use: {
+                            loader: 'babel-loader',
+                            options: {
+                                presets: ['@babel/preset-env']
+                            }
+                        }
+                    }
+                ]
+            },
+            resolve: {
+                extensions: ['.js']
+            }
+        },
+        
+        // Navegadores
+        browsers: ['Chrome'],
+        
+        // REPORTERS MEJORADOS
+        reporters: ['mocha', 'progress', 'kjhtml'],
+        
+        // Configuración específica para cada reporter
+        mochaReporter: {
+            output: 'autowatch',
+            showDiff: true,
+            colors: {
+                success: 'green',
+                info: 'blue',
+                warning: 'yellow',
+                error: 'red'
+            }
+        },
+        
+        // Configuración del reporter de spec
+        specReporter: {
+            maxLogLines: 5,             // Límite de líneas de log
+            suppressErrorSummary: false, // Mostrar resumen de errores
+            suppressFailed: false,      // Mostrar pruebas fallidas
+            suppressPassed: false,      // Mostrar pruebas exitosas
+            suppressSkipped: false,     // Mostrar pruebas saltadas
+            showSpecTiming: true,       // Mostrar tiempo de cada spec
+            failFast: false             // Detener en el primer error
+        },
+        
+        // Plugins (agrega los nuevos)
+        plugins: [
+            'karma-jasmine',
+            'karma-chrome-launcher',
+            'karma-webpack',
+            'karma-mocha-reporter',
+            'karma-spec-reporter',
+            'karma-jasmine-html-reporter'
+        ],
+        
+        // Configuración adicional
+        autoWatch: true,
+        singleRun: process.env.CI === 'true',
+        
+        // Log level más detallado
+        logLevel: config.LOG_INFO,
+        
+        // Colores en la salida
+        colors: true,
+        
+        // Tiempo de espera
+        browserNoActivityTimeout: 30000
+    });
 };

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../config/firebase';
 import { collection, addDoc, updateDoc, doc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
-import './Checkout.css';
+import '../../styles/Checkout.css';
 
 const Checkout = () => {
   const [carrito, setCarrito] = useState([]);
