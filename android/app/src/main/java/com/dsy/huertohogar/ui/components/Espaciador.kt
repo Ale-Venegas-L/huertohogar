@@ -1,0 +1,18 @@
+package com.dsy.huertohogar.ui.components
+
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+
+@Composable
+fun Espaciador(){
+    Spacer(modifier = Modifier.height(8.dp).fillMaxWidth())
+}
+
+@Composable
+fun EspaciadorDoble(){
+    Spacer(modifier = Modifier.height(16.dp).fillMaxWidth())
+}

@@ -6,13 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.huertohogar"
-    compileSdk {
-        version = release(36)
-    }
+    namespace = "com.dsy.huertohogar"
+    compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.huertohogar"
+        applicationId = "com.dsy.huertohogar"
         minSdk = 24
         targetSdk = 36
         versionCode = 1
@@ -40,22 +38,10 @@ android {
     buildFeatures {
         compose = true
     }
-    testOptions{
-        animationsDisabled = true
-    }
 }
 
 dependencies {
-    implementation("androidx.navigation:navigation-compose:2.9.5")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.9.4")
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    implementation(libs.androidx.room.external.antlr)
-    implementation(libs.androidx.ui.test.junit4)
-    kapt("androidx.room:room-compiler:2.6.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.7.0")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.7.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -64,7 +50,15 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended:1.6.0")
     implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.compose.runtime)
+    implementation(libs.androidx.navigation.compose)
+    kapt("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -72,8 +66,4 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-}
-
-tasks.withType<Test>().configureEach {
-    useJUnitPlatform()
 }
