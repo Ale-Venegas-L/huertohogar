@@ -11,79 +11,79 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.dsy.huertohogar.navigation.Screen
+import com.dsy.huertohogar.ui.components.Boton
+import com.dsy.huertohogar.ui.components.EspaciadorDoble
+import com.dsy.huertohogar.ui.components.ProductCard
 import com.dsy.huertohogar.viewmodel.CatalogueViewModel
 import com.dsy.huertohogar.viewmodel.MainViewModel
-import com.dsy.huertohogar.navigation.Screen
 
 @Composable
 fun CatalogueScreen(
     navController: NavController,
-    viewModel: MainViewModel,
-    catalogueViewModel: CatalogueViewModel
+    viewModel: CatalogueViewModel,
+    mainViewModel: MainViewModel
 ) {
-    val productos by catalogueViewModel.productos.collectAsState()
+    val productos by viewModel.productos.collectAsState()
 
     LaunchedEffect(Unit) {
-        catalogueViewModel.cargarProductos()
+        viewModel.cargarProductos()
     }
 
+    val context = LocalContext.current
+    
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
-        Text(text = "Catalogo")
-        Spacer(modifier = Modifier.height(24.dp))
-        // Encabezado de tabla
-        Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-            Text("Nombre", modifier = Modifier.weight(2f))
-            Text("Precio", modifier = Modifier.weight(1f))
-            Text("Stock", modifier = Modifier.weight(1f))
-        }
-        Divider()
-        LazyColumn(modifier = Modifier.fillMaxWidth().weight(1f, fill = true)) {
-            items(productos) { p ->
-                Row(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)) {
-                    Text(p.nombre, modifier = Modifier.weight(2f))
-                    Text("$${p.precio}", modifier = Modifier.weight(1f))
-                    Text(p.stock.toString(), modifier = Modifier.weight(1f))
-                }
-                Divider()
-            }
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = {
-                navController.navigate(Screen.Home.route) {
-                    launchSingleTop = true
-                    restoreState = true
-                }
-            }
+        Text(
+            text = "Catálogo de Productos",
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+        
+        LazyColumn(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Volver a Inicio")
-        }
-        Spacer(modifier = Modifier.height(24.dp))
-        Button(
-            onClick = {
-                navController.navigate(Screen.Profile.route) {
-                    launchSingleTop = true
-                    restoreState = true
-                }
+            items(productos) { producto ->
+                ProductCard(producto = producto, context = context)
             }
+        }
+        EspaciadorDoble()
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            Text("Ir a Perfil")
+            Boton(
+                texto = "Volver a Inicio",
+                onClick = {
+                    navController.navigate(Screen.Home.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
+            Boton(
+                texto = "Ir a Perfil",
+                onClick = {
+                    navController.navigate(Screen.Profile.route) {
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+            )
         }
     }
 }

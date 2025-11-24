@@ -1,0 +1,2 @@
+alias: HuertoHogar
+Password (Key y Key Store): DuocUC

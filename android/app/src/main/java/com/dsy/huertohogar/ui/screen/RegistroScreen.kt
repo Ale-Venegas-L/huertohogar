@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.dsy.huertohogar.navigation.Screen
 import com.dsy.huertohogar.ui.components.*
+import com.dsy.huertohogar.viewmodel.MainViewModel
 import com.dsy.huertohogar.viewmodel.RegistroViewModel
 import kotlinx.coroutines.launch
 
@@ -23,7 +24,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegistroScreen(
     navController: NavController,
-    viewModel: RegistroViewModel
+    viewModel: RegistroViewModel,
+    mainViewModel: MainViewModel
 ) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -41,7 +43,6 @@ fun RegistroScreen(
     ) {
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Logo or Icon
         Icon(
             imageVector = Icons.Default.PersonAdd,
             contentDescription = "Registro",
@@ -49,19 +50,15 @@ fun RegistroScreen(
             tint = MaterialTheme.colorScheme.primary
         )
 
-        Espaciador()
-        Espaciador()
+        EspaciadorDoble()
 
-        // Title
         Text(
             "Crear Cuenta",
             style = MaterialTheme.typography.headlineSmall
         )
 
-        Espaciador()
-        Espaciador()
+        EspaciadorDoble()
 
-        // Username Field
         CampoTexto(
             valor = username,
             onValorChange = { username = it },
@@ -71,27 +68,20 @@ fun RegistroScreen(
 
         Espaciador()
 
-        // Password Field
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+        CampoContraseña(
+            valor = password,
+            onValorChange = {password = it},
+            etiqueta = "Contraseña"
         )
 
         Espaciador()
 
-        // Confirm Password Field
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = { confirmPassword = it },
-            label = { Text("Confirmar contraseña") },
-            visualTransformation = PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            modifier = Modifier.fillMaxWidth()
+        CampoContraseña(
+            valor = confirmPassword,
+            onValorChange = {confirmPassword = it},
+            etiqueta = "Confirmar Contraseña"
         )
+
 
         errorMessage?.let {
             Espaciador()
@@ -117,14 +107,15 @@ fun RegistroScreen(
                         isLoading = true
                         errorMessage = null
                         try {
+                            // Registrar usuario (actual implementación devuelve Unit)
                             viewModel.registrarUsuario(username, password)
+                            // Después de registrar, redirigimos al Login para que el usuario inicie sesión
+                            navController.currentBackStackEntry?.savedStateHandle?.set(
+                                "registration_success",
+                                "¡Registro exitoso! Por favor inicia sesión."
+                            )
                             navController.navigate(Screen.Login.route) {
                                 popUpTo(Screen.Registro.route) { inclusive = true }
-                                // Show success message on login screen
-                                navController.currentBackStackEntry?.savedStateHandle?.set(
-                                    "registration_success",
-                                    "¡Registro exitoso! Por favor inicia sesión."
-                                )
                             }
                         } catch (e: Exception) {
                             errorMessage = "Error al registrar: ${e.message}"
@@ -141,7 +132,6 @@ fun RegistroScreen(
 
         Espaciador()
 
-        // Login Link
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
