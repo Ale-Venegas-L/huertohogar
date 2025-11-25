@@ -10,7 +10,8 @@ export const UserProvider = ({ children }) => {
   const logout = () => {
     // Clear user data
     setUser(null);
-    // Clear any stored tokens or session data
+    // Clear all stored session data
+    localStorage.removeItem('usuario');
     localStorage.removeItem('userToken');
     localStorage.removeItem('userData');
     return true; // Indicate success

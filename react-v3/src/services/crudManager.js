@@ -74,7 +74,6 @@ class CrudManager {
   }
 }
 
-// Export instances for different collections
 export const userManager = new CrudManager('usuario');
 export const productManager = new CrudManager('producto');
 export const orderManager = new CrudManager('compras');

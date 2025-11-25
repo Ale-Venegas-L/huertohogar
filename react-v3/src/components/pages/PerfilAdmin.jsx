@@ -25,13 +25,16 @@ import {
   FiShoppingBag,
   FiInfo,
   FiRefreshCw,
-  FiPlusCircle
+  FiPlusCircle,
+  FiMenu,
+  FiX
 } from 'react-icons/fi';
 
 const PerfilAdmin = () => {
   const { user, logout } = useContext(UserContext);
   const navigate = useNavigate();
   const [activeSection, setActiveSection] = useState('dashboard');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [stats, setStats] = useState({
     users: 0,
     products: 0,
@@ -149,20 +152,24 @@ const PerfilAdmin = () => {
     }
   };
 
+  const handleNavigation = (section) => {
+    setActiveSection(section);
+    setSidebarOpen(false);
+  };
+
   const renderSection = () => {
     switch (activeSection) {
       case 'dashboard':
         return <DashboardSection 
           stats={stats} 
           loading={loading} 
-          setActiveSection={setActiveSection} 
+          setActiveSection={setActiveSection}
+          setSidebarOpen={setSidebarOpen}
         />;
       case 'orders':
         return <OrdersSection />;
       case 'products':
         return <ProductsSection />;
-      case 'categories':
-        return <CategoriesSection />;
       case 'users':
         return <UsersSection />;
       case 'reports':
@@ -176,21 +183,35 @@ const PerfilAdmin = () => {
 
   return (
     <div className="admin-container">
-      {/* Error Message */}
+      {/* Mobile Menu Button */}
+      <button 
+        className="mobile-menu-button" 
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        aria-label={sidebarOpen ? 'Cerrar menú' : 'Abrir menú'}
+      >
+        {sidebarOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+      </button>
+
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div 
+          className="sidebar-overlay" 
+          onClick={() => setSidebarOpen(false)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && setSidebarOpen(false)}
+          aria-label="Cerrar menú"
+        />
+      )}
+
       {error && (
         <div className="error-message">
           {error}
           <button onClick={() => setError(null)} className="close-error">×</button>
         </div>
       )}
-      {/* Header */}
-      <header className="admin-header">
-        <a href="#" className="logo">Huerto Hogar</a>
-      </header>
 
-      {/* Sidebar */}
-      <aside className="admin-sidebar">
-        {/* Welcome Section */}
+      <aside className={`admin-sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-section">
           <section className="welcome-section">
             <h1 className="welcome-title">Panel de Administración</h1>
@@ -198,42 +219,35 @@ const PerfilAdmin = () => {
           </section>
         </div>
 
-        {/* Main Menu */}
         <div className="sidebar-section">
           <h3 className="sidebar-title">Administración</h3>
           <ul className="sidebar-menu">
             <li className={`menu-item ${activeSection === 'dashboard' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('dashboard')}>
+              <button className="menu-link" onClick={() => handleNavigation('dashboard')}>
                 <FiHome className="menu-icon" />
                 Dashboard
               </button>
             </li>
             <li className={`menu-item ${activeSection === 'orders' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('orders')}>
+              <button className="menu-link" onClick={() => handleNavigation('orders')}>
                 <FiShoppingCart className="menu-icon" />
                 Órdenes
               </button>
             </li>
             <li className={`menu-item ${activeSection === 'products' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('products')}>
+              <button className="menu-link" onClick={() => handleNavigation('products')}>
                 <FiPackage className="menu-icon" />
                 Productos
               </button>
             </li>
-            <li className={`menu-item ${activeSection === 'categories' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('categories')}>
-                <FiTag className="menu-icon" />
-                Categorías
-              </button>
-            </li>
             <li className={`menu-item ${activeSection === 'users' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('users')}>
+              <button className="menu-link" onClick={() => handleNavigation('users')}>
                 <FiUsers className="menu-icon" />
                 Usuarios
               </button>
             </li>
             <li className={`menu-item ${activeSection === 'reports' ? 'active' : ''}`}>
-              <button className="menu-link" onClick={() => setActiveSection('reports')}>
+              <button className="menu-link" onClick={() => handleNavigation('reports')}>
                 <FiBarChart2 className="menu-icon" />
                 Reportes
               </button>
@@ -241,7 +255,6 @@ const PerfilAdmin = () => {
           </ul>
         </div>
 
-        {/* Account Section */}
         <div className="sidebar-section">
           <h3 className="sidebar-title">Cuenta</h3>
           <ul className="sidebar-menu">
@@ -254,7 +267,6 @@ const PerfilAdmin = () => {
           </ul>
         </div>
 
-        {/* Action Buttons */}
         <div className="sidebar-section sidebar-actions">
           <button className="action-btn btn-store" onClick={() => navigate('/')}>
             <FiShoppingBag className="menu-icon" />
@@ -271,7 +283,6 @@ const PerfilAdmin = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
       <main className="admin-main">
         {renderSection()}
       </main>
@@ -279,8 +290,7 @@ const PerfilAdmin = () => {
   );
 };
 
-// Dashboard Section Component
-const DashboardSection = ({ stats, loading, setActiveSection }) => {
+const DashboardSection = ({ stats, loading, setActiveSection, setSidebarOpen }) => {
   if (loading) {
     return <div className="loading">Cargando estadísticas...</div>;
   }
@@ -292,7 +302,6 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
         <p className="welcome-subtitle">Bienvenido al panel de administración de Huerto Hogar</p>
       </div>
       
-      {/* Summary Cards */}
       <div className="dashboard-cards-row">
         <div className="summary-card blue-card">
           <div className="card-content">
@@ -340,12 +349,14 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
         </div>
       </div>
 
-      {/* Navigation Grid */}
       <div className="navigation-grid">
         <div className="navigation-row">
           <button 
-            className="nav-button" 
-            onClick={() => setActiveSection('dashboard')}
+            className="menu-link" 
+            onClick={() => {
+              setActiveSection('dashboard');
+              setSidebarOpen(false);
+            }}
           >
             <div className="nav-icon">
               <FiHome size={24} />
@@ -357,8 +368,11 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
           </button>
 
           <button 
-            className="nav-button" 
-            onClick={() => setActiveSection('orders')}
+            className="menu-link" 
+            onClick={() => {
+              setActiveSection('orders');
+              setSidebarOpen(false);
+            }}
           >
             <div className="nav-icon">
               <FiShoppingCart size={24} />
@@ -370,8 +384,11 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
           </button>
 
           <button 
-            className="nav-button" 
-            onClick={() => setActiveSection('products')}
+            className="menu-link" 
+            onClick={() => {
+              setActiveSection('products');
+              setSidebarOpen(false);
+            }}
           >
             <div className="nav-icon">
               <FiPackage size={24} />
@@ -383,15 +400,18 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
           </button>
 
           <button 
-            className="nav-button" 
-            onClick={() => setActiveSection('categories')}
+            className="menu-link" 
+            onClick={() => {
+              setActiveSection('users');
+              setSidebarOpen(false);
+            }}
           >
             <div className="nav-icon">
-              <FiTag size={24} />
+              <FiUsers size={24} />
             </div>
-            <h3 className="nav-title">Categorías</h3>
+            <h3 className="nav-title">Usuarios</h3>
             <p className="nav-description">
-              Organizar productos en categorías para facilitar su navegación.
+              Administrar las cuentas de usuario y sus permisos.
             </p>
           </button>
         </div>
@@ -400,7 +420,6 @@ const DashboardSection = ({ stats, loading, setActiveSection }) => {
   );
 };
 
-// Placeholder Components for Other Sections, now wired to CrudTable
 const OrdersSection = () => (
   <section id="orders">
     <div className="welcome-section">
@@ -455,31 +474,6 @@ const ProductsSection = () => (
   </section>
 );
 
-const CategoriesSection = () => (
-  <section id="categories">
-    <div className="welcome-section">
-      <h2 className="welcome-title">Gestión de Categorías</h2>
-      <p className="welcome-subtitle">Administra las categorías de productos</p>
-    </div>
-    <div className="crud-container">
-      <div className="crud-header">
-        <h3>Lista de Categorías</h3>
-        <div className="crud-actions">
-          <button className="btn btn-primary">
-            <FiPlusCircle className="icon" /> Nueva Categoría
-          </button>
-          <button className="btn btn-secondary">
-            <FiRefreshCw className="icon" /> Actualizar
-          </button>
-        </div>
-      </div>
-      <div className="table-responsive">
-        <CrudTable manager={categoryManager} columns={categoryColumns} />
-      </div>
-    </div>
-  </section>
-);
-
 const UsersSection = () => (
   <section id="users">
     <div className="welcome-section">
@@ -505,17 +499,228 @@ const UsersSection = () => (
   </section>
 );
 
-const ReportsSection = () => (
-  <section id="reports">
-    <div className="welcome-section">
-      <h2 className="welcome-title">Reportes y Análisis</h2>
-      <p className="welcome-subtitle">Genera informes detallados del sistema</p>
-    </div>
-    <div className="crud-container">
-      <p>Sección de reportes en desarrollo</p>
-    </div>
-  </section>
-);
+const ReportsSection = () => {
+  const [timeRange, setTimeRange] = useState('month');
+  const [loading, setLoading] = useState(true);
+  const [reportData, setReportData] = useState({
+    totalSales: 0,
+    totalOrders: 0,
+    avgOrderValue: 0,
+    topProducts: [],
+    recentOrders: [],
+    userGrowth: []
+  });
+
+  useEffect(() => {
+    const fetchReportData = async () => {
+      try {
+        setLoading(true);
+        // Simulate API calls to fetch report data
+        // In a real app, you would fetch this from your backend
+        const orders = await orderManager.getAll();
+        const products = await productManager.getAll();
+        
+        // Calculate metrics
+        const totalSales = orders.reduce((sum, order) => sum + (parseFloat(order.total) || 0), 0);
+        const totalOrders = orders.length;
+        const avgOrderValue = totalOrders > 0 ? totalSales / totalOrders : 0;
+        
+        // Get top 5 products (mock implementation)
+        const topProducts = [...products]
+          .sort((a, b) => (b.ventas || 0) - (a.ventas || 0))
+          .slice(0, 5);
+        
+        // Get recent orders
+        const recentOrders = [...orders]
+          .sort((a, b) => new Date(b.fecha?.toDate?.() || b.fecha) - new Date(a.fecha?.toDate?.() || a.fecha))
+          .slice(0, 5);
+        
+        setReportData({
+          totalSales,
+          totalOrders,
+          avgOrderValue,
+          topProducts,
+          recentOrders,
+          userGrowth: [
+            { month: 'Ene', users: 120 },
+            { month: 'Feb', users: 150 },
+            { month: 'Mar', users: 180 },
+            { month: 'Abr', users: 200 },
+            { month: 'May', users: 250 },
+            { month: 'Jun', users: 300 }
+          ]
+        });
+      } catch (error) {
+        console.error('Error fetching report data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReportData();
+  }, [timeRange]);
+
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-CL', {
+      style: 'currency',
+      currency: 'CLP'
+    }).format(value);
+  };
+
+  if (loading) {
+    return (
+      <section id="reports">
+        <div className="welcome-section">
+          <h2 className="welcome-title">Reportes y Análisis</h2>
+          <p className="welcome-subtitle">Genera informes detallados del sistema</p>
+        </div>
+        <div className="loading">Cargando reportes...</div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="reports">
+      <div className="welcome-section">
+        <h2 className="welcome-title">Reportes y Análisis</h2>
+        <div className="report-actions">
+          <select 
+            value={timeRange} 
+            onChange={(e) => setTimeRange(e.target.value)}
+            className="time-range-selector"
+          >
+            <option value="day">Hoy</option>
+            <option value="week">Esta semana</option>
+            <option value="month">Este mes</option>
+            <option value="year">Este año</option>
+          </select>
+          <button className="btn btn-primary">
+            <FiRefreshCw className="icon" /> Actualizar
+          </button>
+        </div>
+      </div>
+
+      <div className="report-grid">
+        {/* Summary Cards */}
+        <div className="summary-card">
+          <div className="summary-icon">
+            <FiShoppingBag />
+          </div>
+          <div className="summary-content">
+            <h3>Ventas Totales</h3>
+            <p className="summary-value">{formatCurrency(reportData.totalSales)}</p>
+            <span className="summary-change positive">+12% vs mes anterior</span>
+          </div>
+        </div>
+
+        <div className="summary-card">
+          <div className="summary-icon">
+            <FiShoppingCart />
+          </div>
+          <div className="summary-content">
+            <h3>Órdenes</h3>
+            <p className="summary-value">{reportData.totalOrders}</p>
+            <span className="summary-change positive">+8% vs mes anterior</span>
+          </div>
+        </div>
+
+        <div className="summary-card">
+          <div className="summary-icon">
+            <FiUsers />
+          </div>
+          <div className="summary-content">
+            <h3>Valor Promedio</h3>
+            <p className="summary-value">{formatCurrency(reportData.avgOrderValue)}</p>
+            <span className="summary-change negative">-2% vs mes anterior</span>
+          </div>
+        </div>
+
+        {/* Top Products */}
+        <div className="report-card">
+          <div className="card-header">
+            <h3>Productos más vendidos</h3>
+            <button className="btn-text">Ver todos</button>
+          </div>
+          <div className="product-list">
+            {reportData.topProducts.map((product, index) => (
+              <div key={product.id} className="product-item">
+                <span className="product-rank">{index + 1}</span>
+                <div className="product-info">
+                  <h4>{product.nombre}</h4>
+                  <p>{product.categoria || 'Sin categoría'}</p>
+                </div>
+                <span className="product-sales">{product.ventas || 0} ventas</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Orders */}
+        <div className="report-card">
+          <div className="card-header">
+            <h3>Órdenes recientes</h3>
+            <button className="btn-text">Ver todas</button>
+          </div>
+          <div className="order-list">
+            {reportData.recentOrders.map(order => {
+              const orderDate = order.fecha?.toDate?.() || order.fecha || new Date();
+              const formattedDate = orderDate.toLocaleDateString('es-CL', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+              });
+              
+              return (
+                <div key={order.id} className="order-item">
+                  <div className="order-info">
+                    <h4>Orden #{order.id.slice(0, 8)}</h4>
+                    <p>{formattedDate}</p>
+                  </div>
+                  <div className="order-amount">
+                    {formatCurrency(order.total || 0)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* User Growth Chart (Placeholder) */}
+        <div className="report-card chart-card">
+          <div className="card-header">
+            <h3>Crecimiento de usuarios</h3>
+            <select className="chart-period">
+              <option>Últimos 6 meses</option>
+              <option>Último año</option>
+            </select>
+          </div>
+          <div className="chart-placeholder">
+            <div className="chart-legend">
+              <span className="legend-item">
+                <span className="legend-color" style={{backgroundColor: '#4F46E5'}}></span>
+                Usuarios nuevos
+              </span>
+            </div>
+            <div className="chart-bars">
+              {reportData.userGrowth.map((item, index) => (
+                <div key={index} className="chart-bar-container">
+                  <div 
+                    className="chart-bar" 
+                    style={{
+                      height: `${(item.users / 300) * 100}%`,
+                      backgroundColor: '#4F46E5'
+                    }}
+                  ></div>
+                  <span className="chart-label">{item.month}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const ProfileSection = ({ user }) => (
   <section id="profile">
@@ -562,8 +767,11 @@ const CrudTable = ({ manager, columns }) => {
   }, [manager]);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: type === 'number' ? parseFloat(value) : value 
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -609,13 +817,29 @@ const CrudTable = ({ manager, columns }) => {
         {columns.map(column => (
           <div key={column.field} className="form-group">
             <label>{column.headerName}</label>
-            <input
-              type={column.type || 'text'}
-              name={column.field}
-              value={formData[column.field] || ''}
-              onChange={handleInputChange}
-              required={column.required}
-            />
+            {column.type === 'select' ? (
+              <select
+                name={column.field}
+                value={formData[column.field] || ''}
+                onChange={handleInputChange}
+                required={column.required}
+              >
+                <option value="">Seleccione una categoría</option>
+                {column.options && column.options.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={column.type || 'text'}
+                name={column.field}
+                value={formData[column.field] || ''}
+                onChange={handleInputChange}
+                required={column.required}
+              />
+            )}
           </div>
         ))}
         <button type="submit">
@@ -649,8 +873,8 @@ const CrudTable = ({ manager, columns }) => {
                 </td>
               ))}
               <td>
-                <button onClick={() => handleEdit(item)}>Editar</button>
-                <button onClick={() => handleDelete(item.id)}>Eliminar</button>
+                <button onClick={() => handleEdit(item)} className='btn-adm'>Editar</button>
+                <button onClick={() => handleDelete(item.id)} className='btn-adm'>Eliminar</button>
               </td>
             </tr>
           ))}
@@ -660,7 +884,6 @@ const CrudTable = ({ manager, columns }) => {
   );
 };
 
-// Column configurations (kept for future use)
 const userColumns = [
   { field: 'nombre', headerName: 'Nombre', required: true },
   { field: 'email', headerName: 'Email', type: 'email', required: true },
@@ -670,18 +893,25 @@ const userColumns = [
 const productColumns = [
   { field: 'nombre', headerName: 'Nombre', required: true },
   { field: 'precio', headerName: 'Precio', type: 'number', required: true },
-  { field: 'stock', headerName: 'Stock', type: 'number', required: true }
+  { field: 'stock', headerName: 'Stock', type: 'number', required: true },
+  { 
+    field: 'categoria', 
+    headerName: 'Categoría', 
+    type: 'select',
+    options: [
+      { value: 'frutas-frescas', label: 'Frutas Frescas' },
+      { value: 'verduras-organicas', label: 'Verduras Orgánicas' },
+      { value: 'productos-organicos', label: 'Productos Orgánicos' },
+      { value: 'productos-lacteos', label: 'Productos Lácteos' }
+    ],
+    required: true 
+  }
 ];
 
 const orderColumns = [
   { field: 'usuario', headerName: 'Usuario', required: true },
   { field: 'total', headerName: 'Total', type: 'number', required: true },
   { field: 'estado', headerName: 'Estado', required: true }
-];
-
-const categoryColumns = [
-  { field: 'nombre', headerName: 'Nombre', required: true },
-  { field: 'descripcion', headerName: 'Descripción' }
 ];
 
 export default PerfilAdmin;

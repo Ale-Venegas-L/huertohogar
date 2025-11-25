@@ -1,4 +1,181 @@
 /* src/styles/profile.css */
+.profile-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.profile-header {
+  margin-bottom: 2.5rem;
+  text-align: center;
+}
+
+.profile-header h2 {
+  color: #2E8B57;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.welcome-message {
+  color: #666;
+  font-size: 1.1rem;
+}
+
+/* Purchase History Styles */
+.purchase-history {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.purchase-history h3 {
+  color: #2E8B57;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.purchases-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.purchase-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.purchase-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.purchase-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.purchase-id {
+  font-weight: 600;
+  color: #333;
+}
+
+.purchase-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.purchase-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.purchase-status.completada {
+  background-color: #e3f9e5;
+  color: #1b5e20;
+}
+
+.purchase-status.pendiente {
+  background-color: #fff3e0;
+  color: #e65100;
+}
+
+.purchase-status.enviado {
+  background-color: #e3f2fd;
+  color: #0d47a1;
+}
+
+.purchase-details {
+  padding: 1.5rem;
+}
+
+.purchase-items {
+  margin-bottom: 1.5rem;
+}
+
+.purchase-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.purchase-item:last-child {
+  border-bottom: none;
+}
+
+.item-name {
+  color: #333;
+}
+
+.item-price {
+  font-weight: 600;
+  color: #2E8B57;
+}
+
+.purchase-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: 1px solid #eaeaea;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.total-amount {
+  color: #2E8B57;
+  font-size: 1.2rem;
+}
+
+.no-purchases {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #666;
+  background-color: #fafafa;
+  border-radius: 8px;
+  border: 1px dashed #e0e0e0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .purchase-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .purchase-status {
+    align-self: flex-start;
+  }
+  
+  .purchase-item {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .item-price {
+    margin-left: auto;
+  }
+}
+
+/* Admin Dashboard Styles (kept for compatibility) */
 .admin-dashboard {
   padding: 20px;
   max-width: 1200px;
@@ -22,9 +199,9 @@
 }
 
 .tab-button.active {
-  background: #007bff;
+  background: #2E8B57;
   color: white;
-  border-color: #0056b3;
+  border-color: #1b5e20;
 }
 
 .dashboard-stats {

@@ -10,7 +10,7 @@ const Carrito = () => {
   const [cargando, setCargando] = useState(true);
   const navigate = useNavigate();
 
-  // Helpers de precio y descuentos (alineados con public/carrito.js)
+  // Helpers de precio y descuentos
   const getPrecioUnitario = (producto) => {
     const base = Number(producto?.precio) || 0;
     const d = producto?.descuento;
@@ -164,10 +164,24 @@ const Carrito = () => {
   };
 
   const irAlCheckout = () => {
+    // Check if cart is empty
     if (carrito.length === 0) {
       alert('Agrega productos al carrito antes de continuar');
       return;
     }
+
+    // Check if user is logged in
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    if (!usuario) {
+      // Save current URL to redirect back after login
+      localStorage.setItem('redirectAfterLogin', '/checkout');
+      // Redirect to login page
+      alert('Por favor inicia sesión para continuar con tu compra');
+      navigate('/login');
+      return;
+    }
+
+    // If user is logged in, proceed to checkout
     navigate('/checkout');
   };
 
@@ -233,10 +247,10 @@ const Carrito = () => {
                   <h3 className="producto-nombre">{producto.nombre}</h3>
                   <div className="precios-oferta">
                     <span className="precio-anterior">
-                      ${producto.precioAnterior?.toLocaleString('es-CL')}
+                      {producto.precioAnterior?.toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
                     </span>
                     <span className="precio-actual">
-                      ${producto.precio?.toLocaleString('es-CL')}
+                      {getPrecioUnitario(producto).toLocaleString('es-CL', { style: 'currency', currency: 'CLP' })}
                     </span>
                   </div>
                   <p className="stock-disponible">
@@ -300,14 +314,32 @@ const Carrito = () => {
                     </td>
                     <td>{producto.nombre}</td>
                     <td>
-                      {(() => { const m = getDiscountMeta(producto); return (
-                        <div>
-                          <span style={{fontWeight:600, color:'#0a7b18'}}>${'{'}m.current.toLocaleString('es-CL'){'}'}</span>
-                          {m.has && <span style={{marginLeft:8, textDecoration:'line-through', color:'#777'}}>${'{'}m.original.toLocaleString('es-CL'){'}'}</span>}
-                          {m.has && <span style={{marginLeft:8, background:'#e53935', color:'#fff', borderRadius:12, padding:'2px 8px', fontSize:12}}>-{ '{'}m.pct{'}'}%</span>}
-                        </div>
-                      ); })()}
-                  </td>
+                      {(() => { 
+                        const m = getDiscountMeta(producto); 
+                        return (
+                          <div>
+                            <span style={{fontWeight:600, color:'#0a7b18'}}>${m.current.toLocaleString('es-CL')}</span>
+                            {m.has && (
+                              <span style={{marginLeft:8, textDecoration:'line-through', color:'#777'}}>
+                                ${m.original.toLocaleString('es-CL')}
+                              </span>
+                            )}
+                            {m.has && (
+                              <span style={{
+                                marginLeft:8, 
+                                background:'#e53935', 
+                                color:'#fff', 
+                                borderRadius:12, 
+                                padding:'2px 8px', 
+                                fontSize:12
+                              }}>
+                                -{m.pct}%
+                              </span>
+                            )}
+                          </div>
+                        );
+                      })()}
+                    </td>
                     <td>
                       <div className="controles-cantidad">
                         <button 
@@ -328,7 +360,7 @@ const Carrito = () => {
                       </div>
                     </td>
                     <td>
-                      ${'{'}getSubtotal(producto).toLocaleString('es-CL'){'}'}
+                      ${getSubtotal(producto).toLocaleString('es-CL')}
                     </td>
                     <td>
                       <button 
