@@ -1,15 +1,7 @@
-/* Reset CSS */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  /* Body */
-  body {
-    font-family: 'Arial', sans-serif;
-    background: #f8f9fa;
-    color: #333;
-    line-height: 1.6;
   }
   
   /* HEADER */
@@ -21,7 +13,6 @@
     z-index: 1000;
   }
   
-  /* Línea Superior del Header */
   .header-top {
     display: flex;
     justify-content: space-between;
@@ -84,7 +75,7 @@
     z-index: 1000;
     max-height: 300px;
     overflow-y: auto;
-    top: 100%;
+    top: 50%;
     left: 0;
   }
   /* Mostrar dropdown al hacer hover */
@@ -179,7 +170,16 @@
   /* CARDS DE CATEGORÍAS */
   .categorias-section {
     margin-bottom: 50px;
+    width: 100%;
   }
+
+  .categorias-filtros {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
   /* Grid de categorías */
   .categorias-grid {
     display: grid;

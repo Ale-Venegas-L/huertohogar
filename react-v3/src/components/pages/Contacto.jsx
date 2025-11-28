@@ -41,6 +41,7 @@ const Contacto = () => {
 
   return (
     <main>
+    <div className="contact">
       <h1>Contacto</h1>
       <p>Puedes escribirnos para más información.</p>
       <form onSubmit={handleSubmit}>
@@ -65,6 +66,7 @@ const Contacto = () => {
           </div>
         )}
       </form>
+    </div>
     </main>
   )
 };

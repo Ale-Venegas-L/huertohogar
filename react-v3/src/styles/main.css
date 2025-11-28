@@ -35,17 +35,12 @@ body{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
+    width: 50%;
 }
 
 .logo-link {
     display: flex;
     align-items: center;
-}
-
-#logo {
-    height: auto;
-    width: auto;
 }
 
 .menu-toggle {
@@ -85,27 +80,32 @@ body{
 .nav-content {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    padding: 0;
     width: 100%;
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;
-    position: relative;
     z-index: 999;
     background: white;
-    gap: 1rem;
 }
 
 .nav-content.show {
-    max-height: 1000px;
+    width: 100%;
+    max-height: 80vh;
     padding: 1rem 0;
+    overflow: auto;
+    z-index: 9999;
+    background: rgba(255,255,255,0.98);
+    border-radius: 0 0 12px 12px;
 }
+
 
 .nav-center {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     margin: 0.5rem 0;
-    width: 100%;
 }
 
 .nav-center a {
@@ -136,14 +136,16 @@ body{
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    margin: 0.5rem 0;
-    padding: 1rem 0 0;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    padding: 1rem;
     border-top: 1px solid #eee;
     width: 100%;
-    align-items: stretch;
+    height: 100%;
 }
 
-/* Make sure buttons are visible */
+
 .nav-right .btn-carrito,
 .nav-right .btn-login {
     display: flex;
@@ -157,75 +159,6 @@ body{
     text-align: center;
 }
 
-/* Desktop styles */
-@media (min-width: 992px) {
-    .nav-main {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 0.5rem 2rem;
-        align-items: center;
-        position: relative;
-        margin: 0 auto;
-        width: 100%;
-    }
-
-    .menu-toggle {
-        display: none;
-    }
-
-    .nav-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-end;
-        align-items: center;
-        max-height: none !important;
-        width: 100%;
-        padding: 0;
-        background: transparent;
-        position: relative;
-        gap: 2rem;
-    }
-
-    .nav-center {
-        display: flex;
-        flex-direction: row;
-        margin: 0;
-        width: auto;
-        background: transparent;
-        gap: 1.5rem;
-    }
-
-    .nav-center a {
-        width: auto;
-        padding: 0.5rem 1.2rem;
-        background: transparent;
-        color: var(--txt-principal);
-    }
-
-    .nav-center a:hover {
-        background: var(--verde);
-        color: var(--blanco-suave);
-    }
-
-    .nav-right {
-        display: flex;
-        flex-direction: row;
-        margin: 0;
-        padding: 0;
-        border: none;
-        width: auto;
-        gap: 1rem;
-        align-items: center;
-        flex-shrink: 0;
-    }
-    
-    .nav-right .btn-carrito,
-    .nav-right .btn-login {
-        margin: 0;
-    }
-}
-
 /*footer*/
 footer{
     background: var(--blanco-suave);
@@ -237,32 +170,7 @@ footer{
 }
 
 /*Botones*/
-.btn-carrito {
-    padding: 10px 20px;
-    margin: 1em;
-    background: var(--verde);
-    color: var(--blanco-suave);
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
-
-.btn-carrito:hover {
-    background: #218838;
-    transform: translateY(-2px);
-}
-
-.carrito-icon {
-    font-size: 16px;
-}
-
-.btn-login{
+.btn-carrito, .btn-login {
     color: var(--blanco-suave);
     background-color: var(--verde);
     padding: 5pt 10pt;
@@ -272,12 +180,21 @@ footer{
     cursor: pointer;
     transition: all 0.3s ease;
 }
-
-.btn-login:hover{
-    background: var(--blanco-suave);
-    color: var(--verde);
+.btn-carrito:hover, .btn-login:hover {
+    background: #218838;
     transform: translateY(-2px);
+    box-shadow: 5pt 5pt 10pt var(--txt-principal);
+
 }
+
+.btn-carrito:active, .btn-login:active {
+    transform: translateY(-5pt);
+}
+
+.carrito-icon {
+    font-size: 16px;
+}
+
 
 #login{
     background: var(--verde);
@@ -298,22 +215,20 @@ footer{
 
 }
 
-.btn-login:hover{
-    box-shadow: 5pt 5pt 10pt var(--txt-principal);
-}
-
-.btn-login:active{
-    transform: translateY(-5pt);
-}
-
 #logo{
     width: 10em;
+    height: auto;
 }
 
 /*Secciones*/
 main{
     width: 85%;
     margin: auto;
+    padding: 20pt 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15pt;
 }
 
 /*Formularios*/
@@ -350,17 +265,7 @@ button[type="submit"]:active{
     transform: translateY(-5pt);
 }
 
-textarea{
-    width: 100%;
-    padding: 5pt;
-    border: 1pt solid var(--txt-secundario);
-    outline: none;
-    border-radius: 5pt;
-    resize: none;
-    overflow-y: scroll;
-}
-
-input:focus{
+textarea:focus{
     outline: none;
     border-color: var(--verde);
 }
@@ -372,4 +277,103 @@ button[type="submit"]:focus{
 textarea:focus{
     outline: none;
     border-color: var(--verde);
+}
+
+.contact{
+    margin-top: 20pt;
+    margin-bottom: 20pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10pt;
+}
+.contact form{
+    width: 50%;
+}
+
+.nosotros{
+    margin-top: 20pt;
+    margin-bottom: 20pt;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10pt;
+    text-align: center;
+}
+
+.nosotros p{
+    width: 70%;
+}
+
+
+/* Desktop styles */
+@media (min-width: 992px) {
+    .nav-main {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0.5rem 2rem;
+        align-items: center;
+        position: relative;
+        margin: 0 auto;
+        width: 100%;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .nav-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        max-height: none !important;
+        width: 100%;
+        padding: 0;
+        background: transparent;
+        position: relative;
+        gap: 2rem;
+        /* allow wrapping on narrower desktops so items don't overflow */
+        flex-wrap: wrap;
+    }
+
+    .nav-center {
+        display: flex;
+        flex-direction: row;
+        margin: 0;
+        width: auto;
+        background: transparent;
+        gap: 1.5rem;
+    }
+
+    .nav-center a {
+        width: auto;
+        padding: 0.5rem 1.2rem;
+        background: transparent;
+        color: var(--txt-principal);
+    }
+
+    .nav-center a:hover {
+        background: var(--verde);
+        color: var(--blanco-suave);
+    }
+
+    .nav-right {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border: none;
+        width: auto;
+        gap: 1rem;
+        flex-shrink: 1;
+        flex-wrap: wrap;
+    }
+
+    .nav-right .btn-carrito,
+    .nav-right .btn-login {
+        margin: 0;
+        white-space: nowrap;
+    }
 }

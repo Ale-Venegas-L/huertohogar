@@ -2,7 +2,7 @@ import React from "react";
 
 const Nosotros = () => {
   return (
-    <main>
+    <div className="nosotros">
       <h1>Nosotros</h1>
       <p>
         HuertoHogar es una tienda online dedicada a llevar la frescura y calidad de los productos del campo
@@ -26,7 +26,7 @@ const Nosotros = () => {
         estableciendo un nuevo estándar en la distribución de productos agrícolas directos del productor al
         consumidor.
       </p>
-    </main>
+    </div>
   );
 };
 

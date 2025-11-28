@@ -1,10 +1,8 @@
-import { useEffect } from "react";
 import { db } from "../../config/firebase";
 import { collection, getDocs } from "firebase/firestore";
 import "../../styles/catalogo.css";
 
-import React, { useEffect as useEffectReact, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
 
 const Catalogo = () => {
   const [productos, setProductos] = useState([]);
@@ -13,7 +11,7 @@ const Catalogo = () => {
   const [carrito, setCarrito] = useState(() => JSON.parse(localStorage.getItem("carrito") || "[]"));
   const [cargando, setCargando] = useState(true);
 
-  useEffectReact(() => {
+  useEffect(() => {
     const cargarProductos = async () => {
       try {
         const snapshot = await getDocs(collection(db, "producto"));
@@ -28,7 +26,7 @@ const Catalogo = () => {
     cargarProductos();
   }, []);
 
-  useEffectReact(() => {
+  useEffect(() => {
     localStorage.setItem("carrito", JSON.stringify(carrito));
   }, [carrito]);
 
@@ -72,10 +70,7 @@ const Catalogo = () => {
     alert(`"${producto.nombre}" agregado al carrito`);
   };
 
-  const totalCarrito = useMemo(
-    () => carrito.reduce((s, p) => s + (p.precio || 0) * (p.cantidad || 1), 0),
-    [carrito]
-  );
+  // totalCarrito was removed because it wasn't used; compute it where needed.
 
   const onBuscar = () => {
     // No se requiere lógica extra: setBusqueda ya filtra en memo
@@ -92,8 +87,7 @@ const Catalogo = () => {
 
   return (
     <main className="main">
-      {/* Header local del catálogo: buscador y resumen carrito */}
-      <div className="header-top" style={{ border: "none", paddingLeft: 0, paddingRight: 0 }}>
+      <div className="header-top" >
         <div className="search-container">
           <input
             className="search-input"
@@ -106,15 +100,12 @@ const Catalogo = () => {
           />
           <button className="btn-buscar" onClick={onBuscar}>Buscar</button>
         </div>
-        <div className="auth-buttons">
-          <Link to="/carrito" className="btn-signup">🛒 ${totalCarrito.toLocaleString("es-CL")}</Link>
-        </div>
       </div>
 
       {/* Categorías: dropdown y cards */}
       <section className="categorias-section">
         <h2 className="section-title">Categorías</h2>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+        <div className="categorias-filtros">
           <div className="dropdown">
             <button className="btn-ver-todos">Seleccionar categoría ▾</button>
             <div className="dropdown-content" id="dropdownCategorias">
@@ -147,8 +138,8 @@ const Catalogo = () => {
         </h2>
 
         {productosFiltrados.length === 0 ? (
-          <div style={{ gridColumn: "1 / -1", textAlign: "center", padding: 40 }}>
-            <p style={{ fontSize: 18, color: "#666", marginBottom: 15 }}>No se encontraron productos</p>
+          <div>
+            <p >No se encontraron productos</p>
             <button className="btn-signup" onClick={() => { setCategoriaActiva("todos"); setBusqueda(""); }}>Ver todos los productos</button>
           </div>
         ) : (
