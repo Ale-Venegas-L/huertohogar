@@ -19,7 +19,7 @@ import Login from "../components/pages/Login";
 const RouterConfig = () => {
   return (
     <>
-      <LoginWrapper /> {/* si sigue siendo necesario para leer localStorage */}
+      <LoginWrapper />
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />

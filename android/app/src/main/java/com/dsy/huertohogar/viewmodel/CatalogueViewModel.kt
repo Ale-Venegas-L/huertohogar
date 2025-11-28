@@ -18,11 +18,39 @@ class CatalogueViewModel(private val productoDAO: ProductoDAO) : ViewModel() {
         }
     }
 
-    fun agregarProducto(nombre: String, precio: Int, stock: Int, descripcion: String? = null) {
-        val nuevo = Producto(nombre = nombre, precio = precio, stock = stock, descripcion = descripcion)
+    fun agregarProducto(
+        nombre: String,
+        precio: Int,
+        stock: Int,
+        descripcion: String? = null,
+        drawableName: String? = null
+    ) {
         viewModelScope.launch {
+            val nuevo = Producto(
+                nombre = nombre,
+                precio = precio,
+                stock = stock,
+                descripcion = descripcion,
+                drawableName = drawableName
+            )
             productoDAO.insertar(nuevo)
-            _productos.value = productoDAO.obtenerTodos()
+            cargarProductos() // Refresh the list
+        }
+    }
+
+    fun actualizarProducto(producto: Producto) {
+        viewModelScope.launch {
+            productoDAO.update(producto)
+            cargarProductos() // Refresh the list
+        }
+    }
+
+    fun eliminarProducto(producto: Producto) {
+        viewModelScope.launch {
+            // If you have a delete method in your DAO, use it here
+            // productoDAO.eliminar(producto)
+            // For now, we'll just update the list
+            cargarProductos()
         }
     }
 }

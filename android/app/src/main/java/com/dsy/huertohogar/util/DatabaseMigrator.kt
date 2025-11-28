@@ -2,14 +2,11 @@ package com.dsy.huertohogar.util
 
 import android.content.Context
 import com.dsy.huertohogar.data.HuertoHogarDatabase
+import com.dsy.huertohogar.model.Producto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 
 object DatabaseMigrator {
-    private const val ASSETS_IMAGES_DIR = "product_images"
-    private const val INTERNAL_IMAGES_DIR = "product_images"
     private const val MIGRATION_PREFS = "database_migration_prefs"
     private const val MIGRATION_COMPLETE_KEY = "migration_v1_to_v2_complete"
 
@@ -24,31 +21,23 @@ object DatabaseMigrator {
             val productoDao = database.productoDao()
             val products = productoDao.getAllProducts()
 
-            val targetDir = File(context.filesDir, INTERNAL_IMAGES_DIR)
-            if (!targetDir.exists()) {
-                targetDir.mkdirs()
-            }
-
+            // For each product, set the drawable name based on product name
             products.forEach { product ->
-                if (product.imagenPath.isNullOrEmpty()) {
-                    try {
-                        val imageName = "${product.nombre.lowercase().replace(" ", "_")}.jpg"
-                        val assetPath = "$ASSETS_IMAGES_DIR/$imageName"
-                        
-                        context.assets.open(assetPath).use { inputStream ->
-                            val outputFile = File(targetDir, imageName)
-                            FileOutputStream(outputFile).use { outputStream ->
-                                inputStream.copyTo(outputStream)
-                            }
-                            
-                            val updatedProduct = product.copy(
-                                imagenPath = "$INTERNAL_IMAGES_DIR/$imageName"
-                            )
-                            productoDao.update(updatedProduct)
-                        }
-                    } catch (e: Exception) {
-                        // Asset not found or other error - skip this product
-                        e.printStackTrace()
+                if (product.drawableName.isNullOrEmpty()) {
+                    val drawableName = when (product.nombre.lowercase()) {
+                        "manzanas fuji" -> "manzana"
+                        "naranjas valencia" -> "naranja"
+                        "plátanos cavendish" -> "platano"
+                        "zanahorias orgánicas" -> "zanahoria"
+                        "espinacas frescas" -> "espinaca"
+                        "pimientos tricolores" -> "pimenton"
+                        "miel orgánica" -> "miel"
+                        else -> null
+                    }
+                    
+                    drawableName?.let {
+                        val updatedProduct = product.copy(drawableName = it)
+                        productoDao.update(updatedProduct)
                     }
                 }
             }

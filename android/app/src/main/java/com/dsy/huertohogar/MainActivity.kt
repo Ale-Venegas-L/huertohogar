@@ -31,6 +31,7 @@ import com.dsy.huertohogar.ui.theme.HuertoHogarTheme
 import com.dsy.huertohogar.viewmodel.CatalogueViewModel
 import com.dsy.huertohogar.viewmodel.LoginViewModel
 import com.dsy.huertohogar.viewmodel.MainViewModel
+import com.dsy.huertohogar.viewmodel.PostViewModel
 import com.dsy.huertohogar.viewmodel.RegistroViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -168,7 +169,15 @@ class MainActivity : ComponentActivity() {
                             }
                             
                             composable(route = Screen.Api.route) {
-                                ApiScreen()
+                                val postViewModel: PostViewModel = viewModel(
+                                    factory = object : ViewModelProvider.Factory {
+                                        @Suppress("UNCHECKED_CAST")
+                                        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                            return PostViewModel() as T
+                                        }
+                                    }
+                                )
+                                ApiScreen(viewModel = postViewModel)
                             }
                         }
                     }

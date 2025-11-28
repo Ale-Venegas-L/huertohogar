@@ -11,5 +11,5 @@ data class Producto(
     val precio: Int,
     val stock: Int,
     val descripcion: String? = null,
-    val imagenPath: String? = null 
+    val drawableName: String? = null
 )

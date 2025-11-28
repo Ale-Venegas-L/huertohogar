@@ -58,7 +58,7 @@ fun CatalogueScreen(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(productos) { producto ->
-                ProductCard(producto = producto, context = context)
+                ProductCard(producto = producto)
             }
         }
         EspaciadorDoble()
